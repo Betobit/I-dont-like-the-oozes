@@ -1,5 +1,6 @@
 Heroes of Anzu
 ===========================
+Juego para la materia de programación orientada a objetos.
 Se trata un juego de programación 2D estilo plataforma, al estilo de metroid o megaman, con el agregado de que
 el juego incorpora elementos de rol, con el fin de aumentar la duración del mismo y dar más variedad.
 
