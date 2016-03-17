@@ -4,15 +4,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import mx.heroesofanzu.game.HeroesOfAnzu;
 
-/**
- * Created by jesusmartinez on 12/03/16.
- */
-public abstract class Screen implements com.badlogic.gdx.Screen {
+/*
+* Represents one of many application screens, such as a main menu, a settings menu, the game screen and so on.
+*/
+public abstract class MyScreen implements com.badlogic.gdx.Screen {
 
     protected HeroesOfAnzu game;
     protected SpriteBatch batch;
 
-    public Screen(HeroesOfAnzu game) {
+    public MyScreen(HeroesOfAnzu game) {
         this.game = game;
         batch = game.getBatch();
     }

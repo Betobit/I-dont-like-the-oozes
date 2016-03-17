@@ -13,7 +13,7 @@ import mx.heroesofanzu.game.HeroesOfAnzu;
 /**
  * Created by jesusmartinez on 12/03/16.
  */
-public class MainScreen extends Screen {
+public class MainScreen extends MyScreen {
 
     private Sprite logo;
     private Texture texture;
@@ -21,6 +21,10 @@ public class MainScreen extends Screen {
     private TextureRegion dragonRegion;
     private Animation dragonAnimation;
     private float duration = 0;
+
+    private int position = 120;
+    private Sprite skin;
+    private Texture textureSkin;
 
     public MainScreen(HeroesOfAnzu game) {
         super(game);
@@ -32,6 +36,10 @@ public class MainScreen extends Screen {
         logo = new Sprite(texture);
         dragon = new Texture("dragon.png");
         dragonRegion = new TextureRegion(dragon, 376, 68);
+
+        // Set skin
+        textureSkin = new Texture("skin.png");
+        skin = new Sprite(textureSkin);
 
         // Set logo
         logo.setSize(256, 128);
@@ -45,7 +53,7 @@ public class MainScreen extends Screen {
         for(int i=0; i < 4; i++)
             frames[i] = splited[0][i];
 
-        dragonAnimation= new Animation(0.05f, frames);
+        dragonAnimation= new Animation(0.08f, frames);
     }
 
     @Override
@@ -53,13 +61,23 @@ public class MainScreen extends Screen {
         Gdx.gl.glClearColor(1,1,1,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        if(Gdx.input.isTouched()) {
+            position += 20;
+        }
+
         duration += delta;
         TextureRegion frame = dragonAnimation.getKeyFrame(duration, true);
+        skin.setPosition(300, position);
 
         batch.begin();
         logo.draw(batch);
-        batch.draw(frame, 300, 40);
+        batch.draw(frame, 300, position);
+        skin.draw(batch);
         batch.end();
+
+        if( position > 100 )
+            position -= 10;
+
     }
 
     @Override

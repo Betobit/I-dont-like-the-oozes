@@ -5,13 +5,24 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import mx.heroesofanzu.game.Screens.MainScreen;
 
+/*
+ * The main class game that delegates to one or many Screens.
+ */
+
 public class HeroesOfAnzu extends Game {
+
 	private SpriteBatch batch;
 
+	/*
+	*  Return he current common sprite batch.
+	*/
 	public SpriteBatch getBatch() {
 		return batch;
 	}
 
+	/*
+	* Get the common resources used by all the game, such as sounds, spritebach and atlas.
+	 */
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
