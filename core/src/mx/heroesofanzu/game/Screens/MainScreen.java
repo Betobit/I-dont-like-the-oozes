@@ -3,12 +3,12 @@ package mx.heroesofanzu.game.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import mx.heroesofanzu.game.HeroesOfAnzu;
 
@@ -32,25 +32,26 @@ public class MainScreen extends MyScreen {
 	public void show() {
 		textureBackground = new Texture("background.jpg");
 		background = new Sprite(textureBackground);
-		stage = new Stage();
+		stage = new Stage(getViewport());
 		skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 		table = new Table();
 
 		// Set background
 		background.setPosition(0, 0);
-		background.setSize(HeroesOfAnzu.getScreenWidth(), HeroesOfAnzu.getScreenHeight());
+		background.setSize(width, height);
 
 		// Set logo
 		Texture textureLogo = new Texture("logo.png");
 		logo = new Sprite(textureLogo);
-		logo.setPosition(HeroesOfAnzu.getScreenWidth()/2 - logo.getWidth()/2,
-				HeroesOfAnzu.getScreenHeight() - logo.getHeight() - 40);
+		logo.setSize(384, 196);
+		logo.setPosition(width/2 - logo.getWidth()/2, height - logo.getHeight() - 40);
 
 		// Set buttons
 		TextButton play = new TextButton("Jugar", skin);
 		TextButton store = new TextButton("Tienda", skin);
-		play.addListener(new ClickListener() {
-			public void clicked(InputEvent event, float x, float y){
+		play.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
 				game.setScreen(new GameScreen(game));
 			}
 		});
@@ -58,9 +59,10 @@ public class MainScreen extends MyScreen {
 		// Set table with the buttons
 		table.setFillParent(true);
 		table.bottom();
-		table.add(play).width(300).height(80);
-		table.row().padTop(20).padBottom(150);
-		table.add(store).minWidth(300).height(80);
+
+		table.add(play).width(200).height(60);
+		table.row().padTop(20).padBottom(50);
+		table.add(store).width(200).height(60);;
 
 		stage.addActor(table);
 		Gdx.input.setInputProcessor(stage);
@@ -69,7 +71,7 @@ public class MainScreen extends MyScreen {
 	@Override
 	public void render(float delta) {
 		super.render(delta);
-		
+
 		batch.begin();
 		background.draw(batch);
 		logo.draw(batch);

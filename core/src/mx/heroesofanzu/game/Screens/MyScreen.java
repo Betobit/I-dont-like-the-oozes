@@ -16,27 +16,46 @@ import mx.heroesofanzu.game.HeroesOfAnzu;
 public abstract class MyScreen implements Screen {
 
 	protected SpriteBatch batch;
-	private OrthographicCamera cam;
 	protected HeroesOfAnzu game;
+	protected static int width;
+	protected static int height;
 	private Viewport viewport;
+	private OrthographicCamera cam;
 
-	public MyScreen(HeroesOfAnzu game) {
+	public MyScreen(HeroesOfAnzu heroesOfAnzu) {
+		game = heroesOfAnzu;
 		batch = game.getBatch();
-		cam = new OrthographicCamera();
-		this.game = game;
-		viewport = new FillViewport(HeroesOfAnzu.getScreenWidth(), HeroesOfAnzu.getScreenHeight(), cam);
+		width = 800;
+		height= 480;
+		cam  = new OrthographicCamera();
+		viewport = new FillViewport(width, height, cam);
+	}
+
+	/*
+	* Return the camera of the screen.
+	*/
+	public OrthographicCamera getCamera() {
+		return cam;
+	}
+
+	/*
+	* Return the viewport.
+	*/
+	public Viewport getViewport() {
+		return viewport;
 	}
 
 	@Override
 	public void resize(int width, int height) {
 		viewport.update(width, height);
-		cam.position.set(cam.viewportWidth / 2, cam.viewportHeight / 2, 0);
+		cam.position.set(cam.viewportWidth / 2, cam.viewportHeight / 2, 0f);
 	}
 
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		cam.update();
+		batch.setProjectionMatrix(cam.combined);
 	}
 
 	@Override
