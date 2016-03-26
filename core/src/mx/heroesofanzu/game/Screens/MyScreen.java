@@ -1,6 +1,7 @@
 package mx.heroesofanzu.game.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,7 +13,7 @@ import mx.heroesofanzu.game.HeroesOfAnzu;
 /*
 * Represents one of many application screens, such as a main menu, a settings menu, the game screen and so on.
 */
-public abstract class MyScreen implements com.badlogic.gdx.Screen {
+public abstract class MyScreen implements Screen {
 
 	protected SpriteBatch batch;
 	private OrthographicCamera cam;
