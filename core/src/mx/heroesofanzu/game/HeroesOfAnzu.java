@@ -14,7 +14,7 @@ public class HeroesOfAnzu extends Game {
 
 	private SpriteBatch batch;
 	private static int screenWidth;
-    private static int screenHeight;
+	private static int screenHeight;
 
 	/*
 	*  Return the current common sprite batch.
@@ -23,33 +23,33 @@ public class HeroesOfAnzu extends Game {
 		return batch;
 	}
 
-    /*
-    * Return the screen width.
-    */
-    public static int getScreenWidth() {
-        return screenWidth;
-    }
+	/*
+	* Return the screen width.
+	*/
+	public static int getScreenWidth() {
+		return screenWidth;
+	}
 
-    /*
-    * Return the screen height.
-    */
-    public static int getScreenHeight() {
-        return screenHeight;
-    }
+	/*
+	* Return the screen height.
+	*/
+	public static int getScreenHeight() {
+		return screenHeight;
+	}
 
 	/*
 	* Get the common resources used by all the game, such as sounds, spritebach and atlas.
 	 */
 	@Override
-	public void create () {
+	public void create() {
 		batch = new SpriteBatch();
-        screenWidth = Gdx.graphics.getWidth();
-        screenHeight = Gdx.graphics.getHeight();
+		screenWidth = Gdx.graphics.getWidth();
+		screenHeight = Gdx.graphics.getHeight();
 		setScreen(new MainScreen(this));
 	}
 
 	@Override
-	public void render () {
+	public void render() {
 		super.render();
 	}
 

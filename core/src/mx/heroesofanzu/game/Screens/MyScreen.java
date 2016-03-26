@@ -14,52 +14,52 @@ import mx.heroesofanzu.game.HeroesOfAnzu;
 */
 public abstract class MyScreen implements com.badlogic.gdx.Screen {
 
-    protected SpriteBatch batch;
-    private OrthographicCamera cam;
-    protected HeroesOfAnzu game;
-    private Viewport viewport;
+	protected SpriteBatch batch;
+	private OrthographicCamera cam;
+	protected HeroesOfAnzu game;
+	private Viewport viewport;
 
-    public MyScreen(HeroesOfAnzu game) {
-        batch = game.getBatch();
-        cam = new OrthographicCamera();
-        this.game = game;
-        viewport = new FillViewport(HeroesOfAnzu.getScreenWidth(), HeroesOfAnzu.getScreenHeight(), cam);
-    }
+	public MyScreen(HeroesOfAnzu game) {
+		batch = game.getBatch();
+		cam = new OrthographicCamera();
+		this.game = game;
+		viewport = new FillViewport(HeroesOfAnzu.getScreenWidth(), HeroesOfAnzu.getScreenHeight(), cam);
+	}
 
-    @Override
-    public void resize(int width, int height) {
-        viewport.update(width, height);
-        cam.position.set(cam.viewportWidth / 2, cam.viewportHeight / 2, 0);
-    }
+	@Override
+	public void resize(int width, int height) {
+		viewport.update(width, height);
+		cam.position.set(cam.viewportWidth / 2, cam.viewportHeight / 2, 0);
+	}
 
-    @Override
-    public void render(float delta) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        cam.update();
-    }
+	@Override
+	public void render(float delta) {
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		cam.update();
+	}
 
-    @Override
-    public void show() {
+	@Override
+	public void show() {
 
-    }
+	}
 
-    @Override
-    public void pause() {
+	@Override
+	public void pause() {
 
-    }
+	}
 
-    @Override
-    public void resume() {
+	@Override
+	public void resume() {
 
-    }
+	}
 
-    @Override
-    public void hide() {
+	@Override
+	public void hide() {
 
-    }
+	}
 
-    @Override
-    public void dispose() {
+	@Override
+	public void dispose() {
 
-    }
+	}
 }

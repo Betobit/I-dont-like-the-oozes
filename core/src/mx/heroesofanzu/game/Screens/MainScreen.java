@@ -10,27 +10,27 @@ import mx.heroesofanzu.game.HeroesOfAnzu;
 */
 public class MainScreen extends MyScreen {
 
-    private Texture textureBackground;
-    private Sprite background;
+	private Texture textureBackground;
+	private Sprite background;
 
-    public MainScreen(HeroesOfAnzu game) {
-        super(game);
-    }
+	public MainScreen(HeroesOfAnzu game) {
+		super(game);
+	}
 
-    @Override
-    public void show() {
-        textureBackground = new Texture("background.jpg");
-        background = new Sprite(textureBackground);
+	@Override
+	public void show() {
+		textureBackground = new Texture("background.jpg");
+		background = new Sprite(textureBackground);
 
-        background.setPosition(0, 0);
-        background.setSize(HeroesOfAnzu.getScreenWidth(), HeroesOfAnzu.getScreenHeight());
-    }
+		background.setPosition(0, 0);
+		background.setSize(HeroesOfAnzu.getScreenWidth(), HeroesOfAnzu.getScreenHeight());
+	}
 
-    @Override
-    public void render(float delta) {
-        super.render(delta);
-        batch.begin();
-        background.draw(batch);
-        batch.end();
-    }
+	@Override
+	public void render(float delta) {
+		super.render(delta);
+		batch.begin();
+		background.draw(batch);
+		batch.end();
+	}
 }
