@@ -20,22 +20,22 @@ public abstract class MyScreen implements Screen {
 	protected static int width;
 	protected static int height;
 	private Viewport viewport;
-	private OrthographicCamera cam;
+	private OrthographicCamera camera;
 
 	public MyScreen(HeroesOfAnzu heroesOfAnzu) {
 		game = heroesOfAnzu;
 		batch = game.getBatch();
 		width = 800;
 		height= 480;
-		cam  = new OrthographicCamera();
-		viewport = new FillViewport(width, height, cam);
+		camera  = new OrthographicCamera();
+		viewport = new FillViewport(width, height, camera);
 	}
 
 	/*
 	* Return the camera of the screen.
 	*/
 	public OrthographicCamera getCamera() {
-		return cam;
+		return camera;
 	}
 
 	/*
@@ -48,14 +48,14 @@ public abstract class MyScreen implements Screen {
 	@Override
 	public void resize(int width, int height) {
 		viewport.update(width, height);
-		cam.position.set(cam.viewportWidth / 2, cam.viewportHeight / 2, 0f);
+		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0f);
 	}
 
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		cam.update();
-		batch.setProjectionMatrix(cam.combined);
+		camera.update();
+		batch.setProjectionMatrix(camera.combined);
 	}
 
 	@Override

@@ -52,7 +52,7 @@ public class MainScreen extends MyScreen {
 		play.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				game.setScreen(new GameScreen(game));
+				game.setScreen(new PlayScreen(game));
 			}
 		});
 
