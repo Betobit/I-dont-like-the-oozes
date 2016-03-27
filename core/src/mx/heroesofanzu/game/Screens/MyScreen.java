@@ -1,4 +1,4 @@
-package mx.heroesofanzu.game.Screens;
+package mx.heroesofanzu.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;

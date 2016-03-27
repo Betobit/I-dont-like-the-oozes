@@ -1,10 +1,9 @@
 package mx.heroesofanzu.game;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import mx.heroesofanzu.game.Screens.MainScreen;
+import mx.heroesofanzu.game.screens.MainScreen;
 
 /**
  * The main class game that delegates to one or many Screens.

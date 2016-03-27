@@ -1,4 +1,4 @@
-package mx.heroesofanzu.game.Util;
+package mx.heroesofanzu.game.util;
 
 import com.badlogic.gdx.input.GestureDetector;
 
