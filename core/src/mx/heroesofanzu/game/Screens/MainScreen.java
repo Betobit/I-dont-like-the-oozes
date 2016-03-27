@@ -9,12 +9,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 
 import mx.heroesofanzu.game.HeroesOfAnzu;
 
-/*
-* Main menu screen. The first screen which the user interacts.
-*/
+/**
+ * Main menu screen. The first screen which the user interacts.
+ */
 public class MainScreen extends MyScreen {
 
 	private Texture textureBackground;
@@ -24,8 +25,11 @@ public class MainScreen extends MyScreen {
 	private Table table;
 	private Sprite logo;
 
+	/**
+	 * Constructor
+	 */
 	public MainScreen(HeroesOfAnzu game) {
-		super(game);
+		super(game, 800, 480);
 	}
 
 	@Override

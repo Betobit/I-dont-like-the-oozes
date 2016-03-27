@@ -10,9 +10,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import mx.heroesofanzu.game.HeroesOfAnzu;
 
-/*
-* Represents one of many application screens, such as a main menu, a settings menu, the game screen and so on.
-*/
+/**
+ * Represents one of many application screens, such as a main menu, a settings menu, the game screen and so on.
+ */
 public abstract class MyScreen implements Screen {
 
 	protected SpriteBatch batch;
@@ -22,25 +22,28 @@ public abstract class MyScreen implements Screen {
 	private Viewport viewport;
 	private OrthographicCamera camera;
 
-	public MyScreen(HeroesOfAnzu heroesOfAnzu) {
+	/**
+	 * Constructor
+	 */
+	public MyScreen(HeroesOfAnzu heroesOfAnzu, int width, int height) {
 		game = heroesOfAnzu;
 		batch = game.getBatch();
-		width = 800;
-		height= 480;
+		this.width = width;
+		this.height= height;
 		camera  = new OrthographicCamera();
 		viewport = new FillViewport(width, height, camera);
 	}
 
-	/*
-	* Return the camera of the screen.
-	*/
+	/**
+	 * Return the camera of the screen.
+	 */
 	public OrthographicCamera getCamera() {
 		return camera;
 	}
 
-	/*
-	* Return the viewport.
-	*/
+	/**
+	 * Return the viewport.
+	 */
 	public Viewport getViewport() {
 		return viewport;
 	}
