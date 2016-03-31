@@ -1,0 +1,12 @@
+characters.png
+size: 378, 72
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+dragon
+  rotate: false
+  xy: 1, 1
+  size: 376, 70
+  orig: 512, 128
+  offset: 0, 52
+  index: -1

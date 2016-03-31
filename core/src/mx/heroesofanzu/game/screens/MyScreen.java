@@ -13,7 +13,7 @@ import mx.heroesofanzu.game.HeroesOfAnzu;
 /**
  * Represents one of many application screens, such as a main menu, a settings menu, the game screen and so on.
  */
-public abstract class MyScreen implements Screen {
+public class MyScreen implements Screen {
 
 	protected SpriteBatch batch;
 	protected HeroesOfAnzu game;

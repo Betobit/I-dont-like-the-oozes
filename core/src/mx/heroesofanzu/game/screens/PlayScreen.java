@@ -3,6 +3,8 @@ package mx.heroesofanzu.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -13,6 +15,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -22,6 +25,7 @@ import box2dLight.ConeLight;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 import mx.heroesofanzu.game.HeroesOfAnzu;
+import mx.heroesofanzu.game.sprites.Entities.Player;
 import mx.heroesofanzu.game.util.DirectionGestureDetector;
 
 /**
@@ -29,6 +33,7 @@ import mx.heroesofanzu.game.util.DirectionGestureDetector;
  */
 public class PlayScreen extends MyScreen {
 
+	private TextureAtlas atlas;
 	private TiledMap tiledMap;
 	private TiledMapRenderer tiledMapRenderer;
 	private World world;
@@ -36,12 +41,25 @@ public class PlayScreen extends MyScreen {
 
 	private Body player;
 	private Body alarm;
+	private ConeLight alarmLight;
+
+	private Player pruebas;
+
+	private Box2DDebugRenderer b2dr;
 
 	/**
 	 * Constructor
 	 */
 	public PlayScreen(HeroesOfAnzu game) {
 		super(game, 400, 240);
+		tiledMap = new TmxMapLoader().load("level1.tmx");
+		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, batch);
+		world = new World(new Vector2(0, 0), true);
+		rayHandler = new RayHandler(world);
+		atlas = new TextureAtlas("Mario_and_Enemies.pack");
+		pruebas = new Player(this, width/2, height - 96);
+
+		b2dr = new Box2DDebugRenderer();
 	}
 
 	/**
@@ -66,7 +84,7 @@ public class PlayScreen extends MyScreen {
 	 * @param distance Distance of the light.
 	 */
 	private void attachLightToBody(Body body, Color color, int distance) {
-		new PointLight(rayHandler, 200, color, distance, width/2, height/2)
+		new PointLight(rayHandler, 150, color, distance, width/2, height/2)
 				.attachToBody(body);
 	}
 
@@ -99,15 +117,26 @@ public class PlayScreen extends MyScreen {
 		}
 	}
 
+	/**
+	 * Get the world of the screen.
+	 * @return
+	 */
+	public World getWorld() {
+		return world;
+	}
+
+	/**
+	 * Get the world atlas.
+	 * @return
+	 */
+	public TextureAtlas getAtlas() {
+		return atlas;
+	}
+
 	@Override
 	public void show() {
-		tiledMap = new TmxMapLoader().load("level1.tmx");
-		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, batch);
-		world = new World(new Vector2(0, 0), true);
-		rayHandler = new RayHandler(world);
 
-		rayHandler.setAmbientLight(0.2f);
-
+		rayHandler.setAmbientLight(0.35f);
 		BodyDef bdef = new BodyDef();
 		FixtureDef fdef = new FixtureDef();
 
@@ -121,7 +150,7 @@ public class PlayScreen extends MyScreen {
 		player = world.createBody(bdef);
 
 		CircleShape circle = new CircleShape();
-		circle.setRadius(5.6f);
+		circle.setRadius(7);
 		fdef.shape = circle;
 		fdef.density = 0f;
 		fdef.restitution = 0f;
@@ -138,32 +167,32 @@ public class PlayScreen extends MyScreen {
 		fdef.shape = shapeAlarm;
 		alarm.createFixture(fdef);
 
-		// Attach lights
-		ConeLight p2 = new ConeLight(rayHandler, 200, Color.BLUE, 60, width/2, height/2,0, 40);
-		p2.attachToBody(alarm);
-		attachLightToBody(alarm, Color.CORAL, 80);
+		// Attach lights to the alarm body.
+		alarmLight = new ConeLight(rayHandler, 200, Color.RED, 60, width/2, height/2,0, 40);
+		alarmLight.attachToBody(alarm);
+		attachLightToBody(alarm, Color.RED, 80);
 
 
 		Gdx.input.setInputProcessor(new DirectionGestureDetector(new DirectionGestureDetector.DirectionListener() {
 
 			@Override
 			public void onUp() {
-				player.applyLinearImpulse(new Vector2(0, 4f), player.getWorldCenter(), true);
+				player.applyLinearImpulse(new Vector2(0, 12f), player.getWorldCenter(), true);
 			}
 
 			@Override
 			public void onRight() {
-				player.applyLinearImpulse(new Vector2(4f, 0), player.getWorldCenter(), true);
+				player.applyLinearImpulse(new Vector2(12f, 0), player.getWorldCenter(), true);
 			}
 
 			@Override
 			public void onLeft() {
-				player.applyLinearImpulse(new Vector2(-4f, 0), player.getWorldCenter(), true);
+				player.applyLinearImpulse(new Vector2(-12f, 0), player.getWorldCenter(), true);
 			}
 
 			@Override
 			public void onDown() {
-				player.applyLinearImpulse(new Vector2(0, -4f), player.getWorldCenter(), true);
+				player.applyLinearImpulse(new Vector2(0, -12f), player.getWorldCenter(), true);
 
 			}
 		}));
@@ -175,11 +204,19 @@ public class PlayScreen extends MyScreen {
 		inputHandler();
 		tiledMapRenderer.setView(getCamera());
 		tiledMapRenderer.render();
+		batch.begin();
+		batch.draw(pruebas.getFrame(), 300, 300);
+		batch.end();
 		world.step(delta, 6, 2);
 		rayHandler.setCombinedMatrix(getCamera());
 		rayHandler.updateAndRender();
 
 		alarm.setTransform(alarm.getWorldCenter(), alarm.getAngle() + 0.08f);
+
+		pruebas.update(delta);
+
+		b2dr.render(world, getCamera().combined);
+
 		/*
 		batch.begin();
 		tiledMapRenderer.renderTileLayer((TiledMapTileLayer)tiledMap.getLayers().get(2));
@@ -191,5 +228,9 @@ public class PlayScreen extends MyScreen {
 	public void dispose() {
 		rayHandler.dispose();
 		tiledMap.dispose();
+	}
+
+	public SpriteBatch foo(){
+		return batch;
 	}
 }

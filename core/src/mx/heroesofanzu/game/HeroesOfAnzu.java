@@ -22,7 +22,7 @@ public class HeroesOfAnzu extends Game {
 
 	/**
 	 * Get the common resources used by all the game, such as
-	 * sounds,spritebach and atlas.
+	 * sounds,spritebatch and atlas.
 	 */
 	@Override
 	public void create() {
