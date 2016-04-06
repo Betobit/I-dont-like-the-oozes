@@ -215,7 +215,7 @@ public class PlayScreen extends MyScreen {
 
 		pruebas.update(delta);
 
-		b2dr.render(world, getCamera().combined);
+		//b2dr.render(world, getCamera().combined);
 
 		/*
 		batch.begin();
@@ -228,9 +228,5 @@ public class PlayScreen extends MyScreen {
 	public void dispose() {
 		rayHandler.dispose();
 		tiledMap.dispose();
-	}
-
-	public SpriteBatch foo(){
-		return batch;
 	}
 }
