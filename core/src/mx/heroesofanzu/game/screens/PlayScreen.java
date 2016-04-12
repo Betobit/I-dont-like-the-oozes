@@ -3,6 +3,7 @@ package mx.heroesofanzu.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -22,6 +23,7 @@ import box2dLight.ConeLight;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 import mx.heroesofanzu.game.HeroesOfAnzu;
+import mx.heroesofanzu.game.sprites.enemies.Ooze;
 import mx.heroesofanzu.game.util.DirectionGestureDetector;
 
 /**
@@ -36,12 +38,19 @@ public class PlayScreen extends MyScreen {
 
 	private Body player;
 	private Body alarm;
+	private int width;
+	private int height;
+
+	private Ooze ooze;
+
 
 	/**
 	 * Constructor
 	 */
 	public PlayScreen(HeroesOfAnzu game) {
 		super(game, 400, 240);
+		width = getWidth();
+		height = getHeight();
 	}
 
 	/**
@@ -68,6 +77,13 @@ public class PlayScreen extends MyScreen {
 	private void attachLightToBody(Body body, Color color, int distance) {
 		new PointLight(rayHandler, 200, color, distance, width/2, height/2)
 				.attachToBody(body);
+	}
+
+	/**
+	 * @return the common sprite batch.
+	 */
+	public SpriteBatch getBatch() {
+		return batch;
 	}
 
 	/**
@@ -101,21 +117,25 @@ public class PlayScreen extends MyScreen {
 
 	@Override
 	public void show() {
+		// Define enemies.
+		ooze = new Ooze(this);
+
+		// Load map and world.
 		tiledMap = new TmxMapLoader().load("level1.tmx");
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, batch);
 		world = new World(new Vector2(0, 0), true);
+
+		// Set light world.
 		rayHandler = new RayHandler(world);
+		rayHandler.setAmbientLight(0.4f);
 
-		rayHandler.setAmbientLight(0.2f);
-
-		BodyDef bdef = new BodyDef();
-		FixtureDef fdef = new FixtureDef();
-
-		// Draw world
+		// Draw world.
 		drawBodies(3, true);
 		drawBodies(4, false);
 
 		// Set player.
+		BodyDef bdef = new BodyDef();
+		FixtureDef fdef = new FixtureDef();
 		bdef.type = BodyDef.BodyType.DynamicBody;
 		bdef.position.set(width / 2 + 80, height / 2);
 		player = world.createBody(bdef);
@@ -138,11 +158,10 @@ public class PlayScreen extends MyScreen {
 		fdef.shape = shapeAlarm;
 		alarm.createFixture(fdef);
 
-		// Attach lights
+		// Attach lights.
 		ConeLight p2 = new ConeLight(rayHandler, 200, Color.BLUE, 60, width/2, height/2,0, 40);
 		p2.attachToBody(alarm);
 		attachLightToBody(alarm, Color.CORAL, 80);
-
 
 		Gdx.input.setInputProcessor(new DirectionGestureDetector(new DirectionGestureDetector.DirectionListener() {
 
@@ -172,6 +191,7 @@ public class PlayScreen extends MyScreen {
 	@Override
 	public void render(float delta) {
 		super.render(delta);
+
 		inputHandler();
 		tiledMapRenderer.setView(getCamera());
 		tiledMapRenderer.render();
@@ -180,6 +200,8 @@ public class PlayScreen extends MyScreen {
 		rayHandler.updateAndRender();
 
 		alarm.setTransform(alarm.getWorldCenter(), alarm.getAngle() + 0.08f);
+		ooze.update(delta);
+
 		/*
 		batch.begin();
 		tiledMapRenderer.renderTileLayer((TiledMapTileLayer)tiledMap.getLayers().get(2));

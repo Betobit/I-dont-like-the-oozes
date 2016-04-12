@@ -15,12 +15,13 @@ import mx.heroesofanzu.game.HeroesOfAnzu;
  */
 public abstract class MyScreen implements Screen {
 
-	protected SpriteBatch batch;
-	protected HeroesOfAnzu game;
-	protected static int width;
-	protected static int height;
+	private HeroesOfAnzu game;
 	private Viewport viewport;
 	private OrthographicCamera camera;
+	private int width;
+	private static int height;
+
+	protected SpriteBatch batch;
 
 	/**
 	 * Constructor
@@ -46,6 +47,27 @@ public abstract class MyScreen implements Screen {
 	 */
 	public Viewport getViewport() {
 		return viewport;
+	}
+
+	/**
+	 * Return the viewport.
+	 */
+	public HeroesOfAnzu getGame() {
+		return game;
+	}
+
+	/**
+	 * Return the viewport width.
+	 */
+	public int getWidth() {
+		return width;
+	}
+
+	/**
+	 * Return the viewport height.
+	 */
+	public int getHeight() {
+		return height;
 	}
 
 	@Override

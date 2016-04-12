@@ -24,11 +24,16 @@ public class MainScreen extends MyScreen {
 	private Table table;
 	private Sprite logo;
 
+	private int width;
+	private int height;
+
 	/**
 	 * Constructor
 	 */
 	public MainScreen(HeroesOfAnzu game) {
 		super(game, 800, 480);
+		width = getWidth();
+		height= getHeight();
 	}
 
 	@Override
@@ -55,7 +60,7 @@ public class MainScreen extends MyScreen {
 		play.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				game.setScreen(new PlayScreen(game));
+				getGame().setScreen(new PlayScreen(getGame()));
 			}
 		});
 
