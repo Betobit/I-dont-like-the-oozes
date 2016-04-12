@@ -1,4 +1,4 @@
-package mx.heroesofanzu.game.sprites.enemies;
+package mx.heroesofanzu.game.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -12,17 +12,21 @@ import mx.heroesofanzu.game.screens.PlayScreen;
 /**
  * Created by jesusmartinez on 08/04/16.
  */
-public abstract class Enemy extends Sprite {
+public abstract class Entity extends Sprite {
 
+	protected World world;
 	protected Animation enemyAnimation;
 	protected Texture spriteSheet;
 	protected TextureRegion textureRegion;
 
 	protected float duration = 0;
 	protected SpriteBatch batch;
+	protected PlayScreen screen;
 
-	public Enemy(PlayScreen screen, float x, float y) {
-		this.batch = screen.getBatch();
+	public Entity(PlayScreen screen, float x, float y) {
+		this.screen = screen;
+		this.world = screen.getWorld();
+		this.batch = screen.getGame().getBatch();
 		setPosition(x, y);
 		defineEnemy();
 	}

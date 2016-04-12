@@ -5,14 +5,15 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import mx.heroesofanzu.game.screens.PlayScreen;
+import mx.heroesofanzu.game.sprites.Entity;
 
 /**
  * Created by jesusmartinez on 12/04/16.
  */
-public class Ooze extends Enemy {
+public class Ooze extends Entity {
 
-	public Ooze(PlayScreen screen){
-		super(screen, 110, 40);
+	public Ooze(PlayScreen screen, float x, float y){
+		super(screen, x, y);
 	}
 
 	@Override
@@ -33,6 +34,19 @@ public class Ooze extends Enemy {
 	public void update(float delta) {
 		duration += delta;
 		TextureRegion frame = enemyAnimation.getKeyFrame(duration, true);
+
+		float px = screen.getPlayer().getXPosition();
+		float py = screen.getPlayer().getYPosition();
+
+		if( px < getX() )
+			setX(getX()-0.17f);
+		else
+			setX(getX()+0.17f);
+
+		if( py < getY() )
+			setY(getY()-0.17f);
+		else
+			setY(getY()+0.17f);
 
 		batch.begin();
 		batch.draw(frame, getX(), getY(), 24, 25);

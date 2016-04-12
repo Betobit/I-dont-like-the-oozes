@@ -10,19 +10,24 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
+import java.util.ArrayList;
+
 import box2dLight.ConeLight;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 import mx.heroesofanzu.game.HeroesOfAnzu;
+import mx.heroesofanzu.game.sprites.Player;
 import mx.heroesofanzu.game.sprites.enemies.Ooze;
 import mx.heroesofanzu.game.util.DirectionGestureDetector;
 
@@ -36,13 +41,15 @@ public class PlayScreen extends MyScreen {
 	private World world;
 	private RayHandler rayHandler;
 
-	private Body player;
 	private Body alarm;
 	private int width;
 	private int height;
 
-	private Ooze ooze;
+	private ArrayList<Ooze> oozes;
+	private float timer;
+	private Player playerTest;
 
+	private Box2DDebugRenderer b2dr;
 
 	/**
 	 * Constructor
@@ -51,21 +58,6 @@ public class PlayScreen extends MyScreen {
 		super(game, 400, 240);
 		width = getWidth();
 		height = getHeight();
-	}
-
-	/**
-	 * Input handler for desktop tests.
- 	 */
-	private void inputHandler() {
-		if( Gdx.input.isKeyPressed(Input.Keys.RIGHT) )
-			player.applyLinearImpulse(new Vector2(16f, 0), player.getWorldCenter(), true);
-		else if( Gdx.input.isKeyPressed(Input.Keys.LEFT) )
-			player.applyLinearImpulse(new Vector2(-16f, 0), player.getWorldCenter(), true);
-		else if( Gdx.input.isKeyPressed(Input.Keys.UP) )
-			player.applyLinearImpulse(new Vector2(0, 16f), player.getWorldCenter(), true);
-		else if( Gdx.input.isKeyPressed(Input.Keys.DOWN) )
-			player.applyLinearImpulse(new Vector2(0, -16f), player.getWorldCenter(), true);
-
 	}
 
 	/**
@@ -80,10 +72,17 @@ public class PlayScreen extends MyScreen {
 	}
 
 	/**
-	 * @return the common sprite batch.
+	 * @return Return the world.
 	 */
-	public SpriteBatch getBatch() {
-		return batch;
+	public World getWorld() {
+		return world;
+	}
+
+	/**
+	 * @return Return the player.
+	 */
+	public Player getPlayer() {
+		return playerTest;
 	}
 
 	/**
@@ -117,8 +116,8 @@ public class PlayScreen extends MyScreen {
 
 	@Override
 	public void show() {
-		// Define enemies.
-		ooze = new Ooze(this);
+		timer = 0;
+		b2dr = new Box2DDebugRenderer();
 
 		// Load map and world.
 		tiledMap = new TmxMapLoader().load("level1.tmx");
@@ -129,26 +128,20 @@ public class PlayScreen extends MyScreen {
 		rayHandler = new RayHandler(world);
 		rayHandler.setAmbientLight(0.4f);
 
+		// Define enemies.
+		oozes = new ArrayList<Ooze>();
+
 		// Draw world.
 		drawBodies(3, true);
 		drawBodies(4, false);
 
 		// Set player.
-		BodyDef bdef = new BodyDef();
-		FixtureDef fdef = new FixtureDef();
-		bdef.type = BodyDef.BodyType.DynamicBody;
-		bdef.position.set(width / 2 + 80, height / 2);
-		player = world.createBody(bdef);
-
-		CircleShape circle = new CircleShape();
-		circle.setRadius(5.6f);
-		fdef.shape = circle;
-		fdef.density = 0f;
-		fdef.restitution = 0f;
-		player.createFixture(fdef);
-		attachLightToBody(player, Color.CHARTREUSE, 80);
+		playerTest = new Player(this, width / 2 + 80, height / 2);
+		attachLightToBody(playerTest.getBody(), Color.CHARTREUSE, 80);
 
 		// Set light alarm.
+		BodyDef bdef = new BodyDef();
+		FixtureDef fdef = new FixtureDef();
 		bdef.type = BodyDef.BodyType.KinematicBody;
 		bdef.position.set(width/2, height/2);
 		alarm = world.createBody(bdef);
@@ -163,45 +156,33 @@ public class PlayScreen extends MyScreen {
 		p2.attachToBody(alarm);
 		attachLightToBody(alarm, Color.CORAL, 80);
 
-		Gdx.input.setInputProcessor(new DirectionGestureDetector(new DirectionGestureDetector.DirectionListener() {
-
-			@Override
-			public void onUp() {
-				player.applyLinearImpulse(new Vector2(0, 4f), player.getWorldCenter(), true);
-			}
-
-			@Override
-			public void onRight() {
-				player.applyLinearImpulse(new Vector2(4f, 0), player.getWorldCenter(), true);
-			}
-
-			@Override
-			public void onLeft() {
-				player.applyLinearImpulse(new Vector2(-4f, 0), player.getWorldCenter(), true);
-			}
-
-			@Override
-			public void onDown() {
-				player.applyLinearImpulse(new Vector2(0, -4f), player.getWorldCenter(), true);
-
-			}
-		}));
 	}
 
 	@Override
 	public void render(float delta) {
 		super.render(delta);
 
-		inputHandler();
 		tiledMapRenderer.setView(getCamera());
 		tiledMapRenderer.render();
+		b2dr.render(world, getCamera().combined);
 		world.step(delta, 6, 2);
 		rayHandler.setCombinedMatrix(getCamera());
 		rayHandler.updateAndRender();
 
 		alarm.setTransform(alarm.getWorldCenter(), alarm.getAngle() + 0.08f);
-		ooze.update(delta);
 
+		timer+=delta;
+		// Create ooze every 3 seconds.
+		if (timer >= 3) {
+			timer-=3;
+			oozes.add(new Ooze(this, MathUtils.random(width), MathUtils.random(height)));
+		}
+
+		// Render all oozes.
+		for(Ooze o : oozes)
+			o.update(delta);
+
+		playerTest.update(delta);
 		/*
 		batch.begin();
 		tiledMapRenderer.renderTileLayer((TiledMapTileLayer)tiledMap.getLayers().get(2));
