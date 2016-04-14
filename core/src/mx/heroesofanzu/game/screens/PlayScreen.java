@@ -164,7 +164,6 @@ public class PlayScreen extends MyScreen {
 
 		tiledMapRenderer.setView(getCamera());
 		tiledMapRenderer.render();
-		b2dr.render(world, getCamera().combined);
 		world.step(delta, 6, 2);
 		rayHandler.setCombinedMatrix(getCamera());
 		rayHandler.updateAndRender();
@@ -173,8 +172,8 @@ public class PlayScreen extends MyScreen {
 
 		timer+=delta;
 		// Create ooze every 3 seconds.
-		if (timer >= 3) {
-			timer-=3;
+		if (timer >= 4 && oozes.size() < 8) {
+			timer-= 4;
 			oozes.add(new Ooze(this, MathUtils.random(width), MathUtils.random(height)));
 		}
 
@@ -182,6 +181,7 @@ public class PlayScreen extends MyScreen {
 		for(Ooze o : oozes)
 			o.update(delta);
 
+		//b2dr.render(world, getCamera().combined);
 		playerTest.update(delta);
 		/*
 		batch.begin();
