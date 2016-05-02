@@ -1,9 +1,6 @@
 package mx.heroesofanzu.game.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -16,20 +13,16 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-
 import java.util.ArrayList;
-
 import box2dLight.ConeLight;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 import mx.heroesofanzu.game.HeroesOfAnzu;
 import mx.heroesofanzu.game.sprites.Player;
 import mx.heroesofanzu.game.sprites.enemies.Ooze;
-import mx.heroesofanzu.game.util.DirectionGestureDetector;
 
 /**
  * Created by jesusmartinez on 25/03/16.
@@ -41,7 +34,7 @@ public class PlayScreen extends MyScreen {
 	private World world;
 	private RayHandler rayHandler;
 
-	private Body alarm;
+	private ArrayList<Body> alarms;
 	private int width;
 	private int height;
 
@@ -56,6 +49,9 @@ public class PlayScreen extends MyScreen {
 	 */
 	public PlayScreen(HeroesOfAnzu game) {
 		super(game, 400, 240);
+		timer = 0;
+		alarms = new ArrayList<Body>();
+		b2dr = new Box2DDebugRenderer();
 		width = getWidth();
 		height = getHeight();
 	}
@@ -85,40 +81,47 @@ public class PlayScreen extends MyScreen {
 		return playerTest;
 	}
 
-	/**
-	 * Create box2d bodies with or without light.
-	 * @param index The layer to draw.
-	 * @param light if true the box2d body will have a light attached.
-	 */
-	private void drawBodies(int index, boolean light) {
+	private void setAlarms() {
+		for(Body b : alarms) {
+			ConeLight coneLight = new ConeLight(rayHandler, 200, Color.RED, 60, width/2, height/2,0, 40);
+			coneLight.attachToBody(b);
+			attachLightToBody(b, Color.CORAL, 40);
+			b.setActive(false);
+		}
+	}
 
-		BodyDef bdef = new BodyDef();
-		PolygonShape shape = new PolygonShape();
-		FixtureDef fdef = new FixtureDef();
+	/**
+	 * Create box2d bodies.
+	 * @param index The layer to draw.
+	 * @param bodyType Type of the body to draw.
+	 * @return ArrayList of created bodies.
+	 */
+	private ArrayList<Body> createBodies(int index, BodyDef.BodyType bodyType) {
 		Body body;
+		BodyDef bdef = new BodyDef();
+		FixtureDef fdef = new FixtureDef();
+		PolygonShape shape = new PolygonShape();
+		ArrayList<Body> bodies = new ArrayList<Body>();
 
 		for(MapObject object : tiledMap.getLayers().get(index).getObjects().getByType(RectangleMapObject.class)){
 			Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-			bdef.type = BodyDef.BodyType.StaticBody;
+			bdef.type = bodyType;
 			bdef.position.set((rect.getX() + rect.getWidth() / 2), (rect.getY() + rect.getHeight() / 2));
 
 			body = world.createBody(bdef);
-
 			shape.setAsBox(rect.getWidth() / 2, rect.getHeight() / 2 );
 			fdef.shape = shape;
 			body.createFixture(fdef);
 
-			if(light)
-				attachLightToBody(body, Color.RED, 30);
+			bodies.add(body);
 		}
+
+		return bodies;
 	}
 
 	@Override
 	public void show() {
-		timer = 0;
-		b2dr = new Box2DDebugRenderer();
-
 		// Load map and world.
 		tiledMap = new TmxMapLoader().load("level1.tmx");
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, batch);
@@ -131,30 +134,14 @@ public class PlayScreen extends MyScreen {
 		// Define enemies.
 		oozes = new ArrayList<Ooze>();
 
-		// Draw world.
-		drawBodies(3, true);
-		drawBodies(4, false);
+		// Set box2d bodies.
+		createBodies(4, BodyDef.BodyType.StaticBody);
+		alarms = createBodies(3, BodyDef.BodyType.KinematicBody);
+		setAlarms();
 
 		// Set player.
 		playerTest = new Player(this, width / 2 + 80, height / 2);
 		attachLightToBody(playerTest.getBody(), Color.CHARTREUSE, 80);
-
-		// Set light alarm.
-		BodyDef bdef = new BodyDef();
-		FixtureDef fdef = new FixtureDef();
-		bdef.type = BodyDef.BodyType.KinematicBody;
-		bdef.position.set(width/2, height/2);
-		alarm = world.createBody(bdef);
-
-		PolygonShape shapeAlarm = new PolygonShape();
-		shapeAlarm.setAsBox(1, 2);
-		fdef.shape = shapeAlarm;
-		alarm.createFixture(fdef);
-
-		// Attach lights.
-		ConeLight p2 = new ConeLight(rayHandler, 200, Color.BLUE, 60, width/2, height/2,0, 40);
-		p2.attachToBody(alarm);
-		attachLightToBody(alarm, Color.CORAL, 80);
 
 	}
 
@@ -168,26 +155,22 @@ public class PlayScreen extends MyScreen {
 		rayHandler.setCombinedMatrix(getCamera());
 		rayHandler.updateAndRender();
 
-		alarm.setTransform(alarm.getWorldCenter(), alarm.getAngle() + 0.08f);
+		for(Body a : alarms)
+			a.setTransform(a.getWorldCenter(), a.getAngle() + 0.08f);
 
 		timer+=delta;
-		// Create ooze every 3 seconds.
+		// Create ooze every 4 seconds.
 		if (timer >= 4 && oozes.size() < 8) {
 			timer-= 4;
-			oozes.add(new Ooze(this, MathUtils.random(width), MathUtils.random(height)));
+			oozes.add(new Ooze(this, MathUtils.random(width - 10), MathUtils.random(height)));
 		}
 
 		// Render all oozes.
 		for(Ooze o : oozes)
 			o.update(delta);
 
-		//b2dr.render(world, getCamera().combined);
+		b2dr.render(world, getCamera().combined);
 		playerTest.update(delta);
-		/*
-		batch.begin();
-		tiledMapRenderer.renderTileLayer((TiledMapTileLayer)tiledMap.getLayers().get(2));
-		batch.end();
-		*/
 	}
 
 	@Override

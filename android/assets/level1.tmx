@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="15" tilewidth="16" tileheight="16" nextobjectid="32">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="15" tilewidth="16" tileheight="16" nextobjectid="39">
  <tileset firstgid="1" name="roguelikeSheet_transparent" tilewidth="16" tileheight="16" spacing="1" tilecount="1767">
   <image source="tileset.png" width="968" height="526"/>
  </tileset>
  <layer name="background" width="25" height="15">
   <data encoding="base64" compression="zlib">
-   eJy1U0kKADEIEwr9Vj85Dy4DhQ7BGLvMIQcFk7hVM6sDbQBjzJ9A8aAmg6pf9eTxMx7lpQnejFfkYPreXLM6Kv/iKRNRbXQ7nr9vzDQi7pV7xT4yu2A3wGpZH8yPujOvR9bHzp8wH7f+nM3xlF/N6pZG9i93d/DHrBEdpF4uAw==
+   eJy1UzkOADAIcuq3+v9fdelERLDHwNAmAqKOiBgbcwPf+H8DxYOaDKq+6ynjZzzKyxS8jlfkYPpZrq6O+u94r3Yn89eZEevV3Vcnj0rDqXV2y8mm6tG9DfdmMx+v7pzleMuvsnql4d7l6Qx+ZI1YmuAm2g==
   </data>
  </layer>
  <layer name="road" width="25" height="15">
   <data encoding="base64" compression="zlib">
-   eJxjYCANzGQkUQMBMB1o3iU0vIUJU2wGBfZiczOxYsS4F4SnMWLKn8fi/nM49CP7D5c7YOKUyo/aQZoduOIMlk6n4TDjHCPu9IwsTi9/DAY7LiD5fyoS+yIV7SBHDF0c2Z3I+DwFYsj+pAcAABKcXZg=
+   eJxjYCANzGQkUQMaKGSGYBiYDjTvEhrewoQpNoMRtxnkuJlYMXSAzb0gPI0RU/48Fvefw6Ef2X+43AETp1SeFDM4gXHBBcTcTLSzwwlotjMQuwxSO3DFGSydwmhnJgTGJo9LPyn+qAbqqQHiWhqGFbnyxKi5gOT/qUjsi1S0gxwxdHFkdyLj8xSIIfuTHgAAwAZlHw==
   </data>
  </layer>
  <layer name="details" width="25" height="15">
   <data encoding="base64" compression="zlib">
-   eJxjYGBg8GaCYBhAZpMKPJiws1uYIBiZTy5oZMLOxge6KLAPFwikgZnIwAOP+euBchuQ8EYsapHjEZdb8YXfCzS5V1jUUhKPxNjRRYV0SYw/YIAY/2ALS1LsIBdQy45soL4cHHoVmRkYlJCwMjN5diwBmr8UiK8zkqcfGVArn5FSBoDyHrq9pKY/9PyLrh9b3oOlP2L9jG4GcvoFANSwHb4=
+   eJxjY2BgYANic2YGBgsotgRicgA+M0B2FADFyhkZGCqAuIhMO8g1o4uJPPvwgUAamIkMPCg03xtJPy63NlJoRwuNwwA53rxpbBcIEOMfWsc7rUE20P05NPbDEqD5S4H4OiPlZlErvEkpA0B5D91eUtMfev5F148t78HSH7F+RjcDOf0CAHQzEeY=
   </data>
  </layer>
  <objectgroup name="lights">
-  <object id="2" x="80.0319" y="176.184" width="16" height="16"/>
+  <object id="2" x="61" y="14" width="4" height="4"/>
+  <object id="38" x="334" y="14" width="4" height="4"/>
  </objectgroup>
- <objectgroup name="limits">
+ <objectgroup name="limits" visible="0">
   <object id="3" x="31.8565" y="63.7129" width="80" height="64"/>
   <object id="6" x="31.8532" y="143.899" width="80" height="64"/>
-  <object id="9" x="158.974" y="63.7363" width="80" height="112"/>
+  <object id="9" x="158.974" y="63.7363" width="80" height="15.8852"/>
   <object id="10" x="127.716" y="31.24" width="64" height="16"/>
   <object id="11" x="127.716" y="47.3193" width="16" height="80"/>
   <object id="12" x="207.654" y="31.24" width="64" height="16"/>
@@ -43,5 +44,10 @@
   <object id="26" x="382.959" y="143.305" width="16" height="80"/>
   <object id="28" x="111.096" y="-0.540589" width="80" height="16"/>
   <object id="31" x="207.244" y="-0.649423" width="80" height="16"/>
+  <object id="32" x="159.631" y="159.378" width="80" height="15.8852"/>
+  <object id="33" x="158.477" y="80.3334" width="16" height="48"/>
+  <object id="34" x="222.615" y="79.9774" width="16" height="48"/>
+  <object id="35" x="159.725" y="143.444" width="16" height="16"/>
+  <object id="36" x="223.364" y="143.165" width="16" height="16"/>
  </objectgroup>
 </map>

@@ -3,7 +3,8 @@ package mx.heroesofanzu.game.util;
 import com.badlogic.gdx.input.GestureDetector;
 
 /**
- * Created by jesusmartinez on 26/03/16.
+ * Created by Trần Xuân Trường.
+ * https://github.com/tmtxt/agent-069/blob/master/Agent-069/src/mad/agent069/DirectionGestureDetector.java
  */
 public class DirectionGestureDetector extends GestureDetector {
 	public interface DirectionListener {

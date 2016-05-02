@@ -43,7 +43,7 @@ public abstract class MyScreen implements Screen {
 	}
 
 	/**
-	 * Return the viewport.
+	 * Return the viewport.pls
 	 */
 	public Viewport getViewport() {
 		return viewport;

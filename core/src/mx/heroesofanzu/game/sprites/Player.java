@@ -3,10 +3,6 @@ package mx.heroesofanzu.game.sprites;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 
 import mx.heroesofanzu.game.screens.PlayScreen;
 import mx.heroesofanzu.game.util.DirectionGestureDetector;
@@ -14,93 +10,68 @@ import mx.heroesofanzu.game.util.DirectionGestureDetector;
 /**
  * Created by jesusmartinez on 12/04/16.
  */
-public class Player extends Entity{
+public class Player extends Entity {
 
-	private Body body;
+	private Vector2 direction;
 
 	public Player(PlayScreen screen, float x, float y) {
 		super(screen, x, y);
+		direction = new Vector2(16f, 0);
 	}
 
 	@Override
 	protected void defineEnemy() {
-		BodyDef bdef = new BodyDef();
-		FixtureDef fdef = new FixtureDef();
-		bdef.type = BodyDef.BodyType.DynamicBody;
-		bdef.position.set(getX(), getY());
-		body = world.createBody(bdef);
-
-		CircleShape circle = new CircleShape();
-		circle.setRadius(5.8f);
-		fdef.shape = circle;
-		fdef.density = 0f;
-		fdef.restitution = 0f;
-		body.createFixture(fdef);
-
+		super.defineEnemy();
 		setPlayerGestures();
 	}
 
 	@Override
 	public void update(float delta) {
-		inputHandler();
+		super.update(delta);
+		setX(getBody().getPosition().x - 12);
+		setY(getBody().getPosition().y - 6);
+		getBody().setLinearVelocity(direction.x, direction.y);
 	}
 
 	/**
-	 * @return Return the Box2d body.
-	 */
-	public Body getBody() {
-		return body;
-	}
-
-	/**
-	 * @return Return the Y position of the Box2d body.
+	 * @return Return the Y position of the Box2d getBody().
 	 */
 	public float getXPosition() {
-		return body.getPosition().x;
+		return getBody().getPosition().x;
 	}
 
 	/**
 	 * @return Return the X position of the Box2d body.
 	 */
 	public float getYPosition() {
-		return body.getPosition().y;
+		return getBody().getPosition().y;
 	}
 
-	/**
-	 * Input handler for desktop tests.
-	 */
-	private void inputHandler() {
-		if( Gdx.input.isKeyPressed(Input.Keys.RIGHT) )
-			body.applyLinearImpulse(new Vector2(16f, 0), body.getWorldCenter(), true);
-		else if( Gdx.input.isKeyPressed(Input.Keys.LEFT) )
-			body.applyLinearImpulse(new Vector2(-16f, 0), body.getWorldCenter(), true);
-		else if( Gdx.input.isKeyPressed(Input.Keys.UP) )
-			body.applyLinearImpulse(new Vector2(0, 16f), body.getWorldCenter(), true);
-		else if( Gdx.input.isKeyPressed(Input.Keys.DOWN) )
-			body.applyLinearImpulse(new Vector2(0, -16f), body.getWorldCenter(), true);
-	}
-
-	private void setPlayerGestures(){
+	private void setPlayerGestures() {
 		Gdx.input.setInputProcessor(new DirectionGestureDetector(new DirectionGestureDetector.DirectionListener() {
 
 			@Override
 			public void onUp() {
-				body.applyLinearImpulse(new Vector2(0, 4f), body.getWorldCenter(), true);
+				direction.set(0, 50);
+				//getBody().applyLinearImpulse(new Vector2(0, 50f), getBody().getWorldCenter(), true);
 			}
 
 			@Override
 			public void onRight() {
-				body.applyLinearImpulse(new Vector2(4f, 0), body.getWorldCenter(), true);
+				direction.set(50, 0);
+				//getBody().applyLinearImpulse(new Vector2(50f, 0), getBody().getWorldCenter(), true);
 			}
 
 			@Override
 			public void onLeft() {
-				body.applyLinearImpulse(new Vector2(-4f, 0), body.getWorldCenter(), true);
+				direction.set(-50, 0);
+				//getBody().applyLinearImpulse(new Vector2(-50f, 0), getBody().getWorldCenter(), true);
 			}
 
 			@Override
 			public void onDown() {
-				body.applyLinearImpulse(new Vector2(0, -4f), body.getWorldCenter(), true);
+				direction.set(0, -50);
+				//getBody().applyLinearImpulse(new Vector2(0, -50f), getBody().getWorldCenter(), true);
 			}
 		}));
 	}
