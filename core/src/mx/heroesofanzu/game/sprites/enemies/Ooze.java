@@ -1,8 +1,5 @@
 package mx.heroesofanzu.game.sprites.enemies;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import mx.heroesofanzu.game.screens.PlayScreen;
@@ -21,8 +18,8 @@ public class Ooze extends Entity {
 	public void update(float delta) {
 		super.update(delta);
 
-		float px = screen.getPlayer().getXPosition();
-		float py = screen.getPlayer().getYPosition();
+		float px = getScreen().getPlayer().getXPosition();
+		float py = getScreen().getPlayer().getYPosition();
 
 		if( px < getX() ) {
 			getBody().applyLinearImpulse(new Vector2(-0.37f, 0), getBody().getWorldCenter(), true);

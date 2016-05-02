@@ -18,15 +18,14 @@ import mx.heroesofanzu.game.screens.PlayScreen;
  */
 public abstract class Entity extends Sprite {
 
-	protected World world;
-	protected Animation enemyAnimation;
-	protected Texture spriteSheet;
-	protected TextureRegion textureRegion;
+	private World world;
+	private Animation enemyAnimation;
+	private Texture spriteSheet;
+	private TextureRegion textureRegion;
 
-	protected float duration = 0;
-	protected SpriteBatch batch;
-	protected PlayScreen screen;
-
+	private float duration = 0;
+	private SpriteBatch batch;
+	private PlayScreen screen;
 	private Body body;
 
 	public Entity(PlayScreen screen, float x, float y) {
@@ -51,6 +50,16 @@ public abstract class Entity extends Sprite {
 		defineEnemy();
 	}
 
+	/**
+	 * @return Return PlayScreen.
+	 */
+	public PlayScreen getScreen() {
+		return screen;
+	}
+
+	/**
+	 * Get the sprite sheet of the entity, split it and create the animation.
+	 */
 	protected void defineEnemy() {
 		spriteSheet = new Texture("enemies/ooze.png");
 		textureRegion = new TextureRegion(spriteSheet, 372, 80);
@@ -64,6 +73,10 @@ public abstract class Entity extends Sprite {
 		enemyAnimation = new Animation(0.1f, frames);
 	}
 
+	/**
+	 * Get the frame of the animation and draw it.
+	 * @param delta Delta time
+	 */
 	protected void update(float delta) {
 		duration += delta;
 		TextureRegion frame = enemyAnimation.getKeyFrame(duration, true);

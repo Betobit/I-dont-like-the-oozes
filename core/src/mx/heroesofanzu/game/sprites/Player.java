@@ -53,25 +53,21 @@ public class Player extends Entity {
 			@Override
 			public void onUp() {
 				direction.set(0, 50);
-				//getBody().applyLinearImpulse(new Vector2(0, 50f), getBody().getWorldCenter(), true);
 			}
 
 			@Override
 			public void onRight() {
 				direction.set(50, 0);
-				//getBody().applyLinearImpulse(new Vector2(50f, 0), getBody().getWorldCenter(), true);
 			}
 
 			@Override
 			public void onLeft() {
 				direction.set(-50, 0);
-				//getBody().applyLinearImpulse(new Vector2(-50f, 0), getBody().getWorldCenter(), true);
 			}
 
 			@Override
 			public void onDown() {
 				direction.set(0, -50);
-				//getBody().applyLinearImpulse(new Vector2(0, -50f), getBody().getWorldCenter(), true);
 			}
 		}));
 	}

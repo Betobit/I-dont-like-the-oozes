@@ -169,7 +169,7 @@ public class PlayScreen extends MyScreen {
 		for(Ooze o : oozes)
 			o.update(delta);
 
-		b2dr.render(world, getCamera().combined);
+		//b2dr.render(world, getCamera().combined);
 		playerTest.update(delta);
 	}
 
