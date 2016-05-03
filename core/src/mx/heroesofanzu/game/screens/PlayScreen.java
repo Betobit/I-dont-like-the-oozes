@@ -1,6 +1,8 @@
 package mx.heroesofanzu.game.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -16,10 +18,14 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+
 import java.util.ArrayList;
+import java.util.Iterator;
+
 import box2dLight.ConeLight;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
+import mx.heroesofanzu.game.Constants;
 import mx.heroesofanzu.game.HeroesOfAnzu;
 import mx.heroesofanzu.game.sprites.Player;
 import mx.heroesofanzu.game.sprites.enemies.Ooze;
@@ -43,6 +49,7 @@ public class PlayScreen extends MyScreen {
 	private Player playerTest;
 
 	private Box2DDebugRenderer b2dr;
+	private ShapeRenderer shapeRenderer;
 
 	/**
 	 * Constructor
@@ -54,6 +61,7 @@ public class PlayScreen extends MyScreen {
 		b2dr = new Box2DDebugRenderer();
 		width = getWidth();
 		height = getHeight();
+		shapeRenderer = new ShapeRenderer();
 	}
 
 	/**
@@ -159,17 +167,30 @@ public class PlayScreen extends MyScreen {
 			a.setTransform(a.getWorldCenter(), a.getAngle() + 0.08f);
 
 		timer+=delta;
+
 		// Create ooze every 4 seconds.
 		if (timer >= 4 && oozes.size() < 8) {
 			timer-= 4;
 			oozes.add(new Ooze(this, MathUtils.random(width - 10), MathUtils.random(height)));
 		}
 
-		// Render all oozes.
-		for(Ooze o : oozes)
-			o.update(delta);
 
-		//b2dr.render(world, getCamera().combined);
+		shapeRenderer.setProjectionMatrix(getCamera().combined);
+
+		// Iterate all oozes
+		Iterator<Ooze> iterator = oozes.iterator();
+		while(iterator.hasNext()) {
+			Ooze o = iterator.next();
+			if(o.getBoundingRectangle().overlaps(playerTest.getBoundingRectangle())) {
+				world.destroyBody(o.getBody());
+				iterator.remove();
+			}
+			o.update(delta);
+		}
+
+		if(Constants.DEBUGGING)
+			b2dr.render(world, getCamera().combined);
+
 		playerTest.update(delta);
 	}
 

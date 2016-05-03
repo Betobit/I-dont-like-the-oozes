@@ -33,6 +33,7 @@ public abstract class Entity extends Sprite {
 		this.world = screen.getWorld();
 		this.batch = screen.getGame().getBatch();
 		setPosition(x, y);
+		setBounds(x,y, 24, 25);
 
 		BodyDef bdef = new BodyDef();
 		FixtureDef fdef = new FixtureDef();
