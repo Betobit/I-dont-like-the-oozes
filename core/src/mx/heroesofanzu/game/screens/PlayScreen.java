@@ -1,6 +1,5 @@
 package mx.heroesofanzu.game.screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObject;
@@ -15,7 +14,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -59,9 +62,9 @@ public class PlayScreen extends MyScreen {
 		timer = 0;
 		alarms = new ArrayList<Body>();
 		b2dr = new Box2DDebugRenderer();
+		shapeRenderer = new ShapeRenderer();
 		width = getWidth();
 		height = getHeight();
-		shapeRenderer = new ShapeRenderer();
 	}
 
 	/**
@@ -148,8 +151,28 @@ public class PlayScreen extends MyScreen {
 		setAlarms();
 
 		// Set player.
-		playerTest = new Player(this, width / 2 + 80, height / 2);
+		playerTest = new Player(this, width / 2, height / 2);
 		attachLightToBody(playerTest.getBody(), Color.CHARTREUSE, 80);
+
+		world.setContactListener(new ContactListener() {
+			@Override
+			public void beginContact(Contact contact) {
+				// Check to see if the collision is between the second sprite and the bottom of the screen
+				// If so apply a random amount of upward force to both objects... just because
+			}
+
+			@Override
+			public void endContact(Contact contact) {
+			}
+
+			@Override
+			public void preSolve(Contact contact, Manifold oldManifold) {
+			}
+
+			@Override
+			public void postSolve(Contact contact, ContactImpulse impulse) {
+			}
+		});
 
 	}
 
@@ -163,33 +186,37 @@ public class PlayScreen extends MyScreen {
 		rayHandler.setCombinedMatrix(getCamera());
 		rayHandler.updateAndRender();
 
-		for(Body a : alarms)
+		for(Body a : alarms) {
 			a.setTransform(a.getWorldCenter(), a.getAngle() + 0.08f);
+		}
 
 		timer+=delta;
 
 		// Create ooze every 4 seconds.
-		if (timer >= 4 && oozes.size() < 8) {
+		if (timer >= 4 && oozes.size() < 2) {
 			timer-= 4;
 			oozes.add(new Ooze(this, MathUtils.random(width - 10), MathUtils.random(height)));
 		}
 
-
-		shapeRenderer.setProjectionMatrix(getCamera().combined);
-
-		// Iterate all oozes
+		// Iterate all oozes.
 		Iterator<Ooze> iterator = oozes.iterator();
 		while(iterator.hasNext()) {
 			Ooze o = iterator.next();
-			if(o.getBoundingRectangle().overlaps(playerTest.getBoundingRectangle())) {
-				world.destroyBody(o.getBody());
-				iterator.remove();
+
+			if(Constants.DEBUGGING) {
+				Rectangle rect = o.getBoundingRectangle();
+				shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+				shapeRenderer.rect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+				shapeRenderer.rect(playerTest.getX(), playerTest.getY(), playerTest.getWidth(), playerTest.getHeight());
+				shapeRenderer.end();
+				//Gdx.app.log("Player", String.format("x: %2f y:%2f", playerTest.getX(), playerTest.getY()));
 			}
 			o.update(delta);
 		}
 
-		if(Constants.DEBUGGING)
+		if(Constants.DEBUGGING) {
 			b2dr.render(world, getCamera().combined);
+		}
 
 		playerTest.update(delta);
 	}

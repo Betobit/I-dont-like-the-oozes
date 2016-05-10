@@ -32,8 +32,5 @@ public class Ooze extends Entity {
 		} else {
 			getBody().applyLinearImpulse(new Vector2(0, 0.37f), getBody().getWorldCenter(), true);
 		}
-
-		setX(getBody().getPosition().x - 12);
-		setY(getBody().getPosition().y - 6);
 	}
 }

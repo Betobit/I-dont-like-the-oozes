@@ -28,8 +28,6 @@ public class Player extends Entity {
 	@Override
 	public void update(float delta) {
 		super.update(delta);
-		setX(getBody().getPosition().x - 12);
-		setY(getBody().getPosition().y - 6);
 		getBody().setLinearVelocity(direction.x, direction.y);
 	}
 

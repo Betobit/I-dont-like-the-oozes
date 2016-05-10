@@ -1,5 +1,6 @@
 package mx.heroesofanzu.game.sprites;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -10,7 +11,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
-
 import mx.heroesofanzu.game.screens.PlayScreen;
 
 /**
@@ -33,7 +33,7 @@ public abstract class Entity extends Sprite {
 		this.world = screen.getWorld();
 		this.batch = screen.getGame().getBatch();
 		setPosition(x, y);
-		setBounds(x,y, 24, 25);
+		setSize(24, 25);
 
 		BodyDef bdef = new BodyDef();
 		FixtureDef fdef = new FixtureDef();
@@ -81,8 +81,13 @@ public abstract class Entity extends Sprite {
 	protected void update(float delta) {
 		duration += delta;
 		TextureRegion frame = enemyAnimation.getKeyFrame(duration, true);
+
+		setX(getBody().getPosition().x);
+		setY(getBody().getPosition().y);
+
+		// Center sprite in box2d body
 		batch.begin();
-		batch.draw(frame, getX(), getY(), 24, 25);
+		batch.draw(frame, getX() - 12, getY() - 6, 24, 25);
 		batch.end();
 	}
 
