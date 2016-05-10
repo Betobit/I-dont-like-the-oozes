@@ -19,7 +19,8 @@ import mx.heroesofanzu.game.screens.PlayScreen;
 public abstract class Entity extends Sprite {
 
 	private World world;
-	private Animation enemyAnimation;
+
+	private Animation bodyAnimation;
 	private Texture spriteSheet;
 	private TextureRegion textureRegion;
 
@@ -48,7 +49,7 @@ public abstract class Entity extends Sprite {
 		fdef.restitution = 0f;
 		body.createFixture(fdef);
 
-		defineEnemy();
+		defineBody();
 	}
 
 	/**
@@ -61,18 +62,7 @@ public abstract class Entity extends Sprite {
 	/**
 	 * Get the sprite sheet of the entity, split it and create the animation.
 	 */
-	protected void defineEnemy() {
-		spriteSheet = new Texture("enemies/ooze.png");
-		textureRegion = new TextureRegion(spriteSheet, 372, 80);
-
-		TextureRegion[][] splited = textureRegion.split(73, 80);
-		TextureRegion[] frames = new TextureRegion[5];
-
-		for(int i=0; i < 5; i++)
-			frames[i] = splited[0][i];
-
-		enemyAnimation = new Animation(0.1f, frames);
-	}
+    	protected abstract void defineBody();
 
 	/**
 	 * Get the frame of the animation and draw it.
@@ -80,12 +70,10 @@ public abstract class Entity extends Sprite {
 	 */
 	protected void update(float delta) {
 		duration += delta;
-		TextureRegion frame = enemyAnimation.getKeyFrame(duration, true);
+		TextureRegion frame = bodyAnimation.getKeyFrame(duration, true);
 
 		setX(getBody().getPosition().x);
 		setY(getBody().getPosition().y);
-
-		// Center sprite in box2d body
 		batch.begin();
 		batch.draw(frame, getX() - 12, getY() - 6, 24, 25);
 		batch.end();
@@ -97,5 +85,37 @@ public abstract class Entity extends Sprite {
 	public Body getBody() {
 		return body;
 	}
+	/**
+	 * @return Return the Animation.
+	 */
+	public Animation getBodyAnimation() {
+        	return bodyAnimation;
+    	}
+
+    	public void setBodyAnimation(Animation bodyAnimation) {
+        	this.bodyAnimation = bodyAnimation;
+    	}
+	
+	/**
+	 * @return Return the Texture.
+	 */
+    	public Texture getSpriteSheet() {
+        	return spriteSheet;
+    	}
+
+    	public void setSpriteSheet(Texture spriteSheet) {
+        	this.spriteSheet = spriteSheet;
+	}
+	
+	/**
+	 * @return Return the TextureRegion.
+	 */
+	public TextureRegion getTextureRegion() {
+	        return textureRegion;
+    	}
+
+	public void setTextureRegion(TextureRegion textureRegion) {
+	        this.textureRegion = textureRegion;
+	 }
 
 }

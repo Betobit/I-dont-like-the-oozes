@@ -1,5 +1,8 @@
 package mx.heroesofanzu.game.sprites.enemies;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import mx.heroesofanzu.game.screens.PlayScreen;
@@ -18,6 +21,7 @@ public class Ooze extends Entity {
 	public void update(float delta) {
 		super.update(delta);
 
+
 		float px = getScreen().getPlayer().getXPosition();
 		float py = getScreen().getPlayer().getYPosition();
 
@@ -32,5 +36,18 @@ public class Ooze extends Entity {
 		} else {
 			getBody().applyLinearImpulse(new Vector2(0, 0.37f), getBody().getWorldCenter(), true);
 		}
+	}
+
+    @Override
+	protected void defineBody() {
+		setSpriteSheet(new Texture("enemies/ooze.png"));
+		setTextureRegion(new TextureRegion(getSpriteSheet(), 372, 80));
+
+		TextureRegion[][] splited = getTextureRegion().split(73, 80);
+		TextureRegion[] frames = new TextureRegion[5];
+
+		for(int i=0; i < 5; i++)
+			frames[i] = splited[0][i];
+		setBodyAnimation(new Animation(0.1f, frames));
 	}
 }
