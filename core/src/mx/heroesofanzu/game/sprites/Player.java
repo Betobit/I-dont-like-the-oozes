@@ -13,7 +13,7 @@ import mx.heroesofanzu.game.util.DirectionGestureDetector;
  * Modificated by carlossuarez 9/5/16
  */
 public class Player extends Entity {
-
+	
     private Vector2 direction;
 
 	public Player(PlayScreen screen, float x, float y) {
@@ -45,7 +45,6 @@ public class Player extends Entity {
 
 	private void setPlayerGestures() {
 		Gdx.input.setInputProcessor(new DirectionGestureDetector(new DirectionGestureDetector.DirectionListener() {
-
 			@Override
 			public void onUp() {
 				direction.set(0, 50);
