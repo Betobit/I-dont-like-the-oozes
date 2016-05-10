@@ -1,4 +1,5 @@
 package mx.heroesofanzu.game.sprites;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -19,7 +20,6 @@ public class Player extends Entity {
 		super(screen, x, y);
 		direction = new Vector2(16f, 0);
 	}
-
 
 	@Override
 	public void update(float delta) {
