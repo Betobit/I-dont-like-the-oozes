@@ -43,7 +43,7 @@ public abstract class Entity extends Sprite {
 		body = world.createBody(bdef);
 
 		CircleShape circle = new CircleShape();
-		circle.setRadius(4f);
+		circle.setRadius(5.8f);
 		fdef.shape = circle;
 		fdef.density = 0f;
 		fdef.restitution = 0f;
