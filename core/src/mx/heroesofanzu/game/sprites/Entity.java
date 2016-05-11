@@ -1,6 +1,5 @@
 package mx.heroesofanzu.game.sprites;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -11,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+
 import mx.heroesofanzu.game.screens.PlayScreen;
 
 /**
@@ -49,20 +49,8 @@ public abstract class Entity extends Sprite {
 		fdef.restitution = 0f;
 		body.createFixture(fdef);
 
-		defineBody();
+		defineSpriteSheet();
 	}
-
-	/**
-	 * @return Return PlayScreen.
-	 */
-	public PlayScreen getScreen() {
-		return screen;
-	}
-
-	/**
-	 * Get the sprite sheet of the entity, split it and create the animation.
-	 */
-    	protected abstract void defineBody();
 
 	/**
 	 * Get the frame of the animation and draw it.
@@ -80,30 +68,36 @@ public abstract class Entity extends Sprite {
 	}
 
 	/**
+	 * Get the sprite sheet of the entity, split it and create the animation.
+	 */
+	protected abstract void defineSpriteSheet();
+
+	/**
 	 * @return Return the Box2d body.
 	 */
 	public Body getBody() {
 		return body;
 	}
-	/**
-	 * @return Return the Animation.
-	 */
-	public Animation getBodyAnimation() {
-        	return bodyAnimation;
-    	}
 
-    	public void setBodyAnimation(Animation bodyAnimation) {
+	/**
+	 * @param bodyAnimation
+	 */
+	public void setBodyAnimation(Animation bodyAnimation) {
         	this.bodyAnimation = bodyAnimation;
     	}
 	
 	/**
 	 * @return Return the Texture.
 	 */
-    	public Texture getSpriteSheet() {
-        	return spriteSheet;
-    	}
+	public Texture getSpriteSheet() {
+		return spriteSheet;
+	}
 
-    	public void setSpriteSheet(Texture spriteSheet) {
+	/**
+	 * Set sprite sheet for the entity.
+	 * @param spriteSheet
+	 */
+	public void setSpriteSheet(Texture spriteSheet) {
         	this.spriteSheet = spriteSheet;
 	}
 	
@@ -111,11 +105,22 @@ public abstract class Entity extends Sprite {
 	 * @return Return the TextureRegion.
 	 */
 	public TextureRegion getTextureRegion() {
-	        return textureRegion;
-    	}
+		return textureRegion;
+	}
 
+	/**
+	 * Set a texture region for the entity.
+	 * @param textureRegion
+	 */
 	public void setTextureRegion(TextureRegion textureRegion) {
 	        this.textureRegion = textureRegion;
 	 }
+
+	/**
+	 * @return Return PlayScreen.
+	 */
+	public PlayScreen getScreen() {
+		return screen;
+	}
 
 }

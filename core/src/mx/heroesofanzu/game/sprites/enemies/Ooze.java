@@ -39,7 +39,7 @@ public class Ooze extends Entity {
 	}
 
     @Override
-	protected void defineBody() {
+	protected void defineSpriteSheet() {
 		setSpriteSheet(new Texture("enemies/ooze.png"));
 		setTextureRegion(new TextureRegion(getSpriteSheet(), 372, 80));
 

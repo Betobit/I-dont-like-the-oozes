@@ -66,7 +66,7 @@ public class Player extends Entity {
 	}
 
 	@Override
-	protected void defineBody() {
+	protected void defineSpriteSheet() {
 		TextureRegion[] frames = new TextureRegion[6];
 		for(int i=0; i < 6; i++) {
 			setSpriteSheet(new Texture("GoldCoinSprite/coin" + (i + 1) + ".png"));

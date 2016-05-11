@@ -30,6 +30,7 @@ import box2dLight.PointLight;
 import box2dLight.RayHandler;
 import mx.heroesofanzu.game.Constants;
 import mx.heroesofanzu.game.HeroesOfAnzu;
+import mx.heroesofanzu.game.scenes.HUD;
 import mx.heroesofanzu.game.sprites.Player;
 import mx.heroesofanzu.game.sprites.enemies.Ooze;
 
@@ -38,19 +39,26 @@ import mx.heroesofanzu.game.sprites.enemies.Ooze;
  */
 public class PlayScreen extends MyScreen {
 
-	private TiledMap tiledMap;
-	private TiledMapRenderer tiledMapRenderer;
+	// World
 	private World world;
 	private RayHandler rayHandler;
-
-	private ArrayList<Body> alarms;
 	private int width;
 	private int height;
 
-	private ArrayList<Ooze> oozes;
-	private float timer;
-	private Player playerTest;
+	// Map
+	private TiledMap tiledMap;
+	private TiledMapRenderer tiledMapRenderer;
 
+	// Entities
+	private Player playerTest;
+	private ArrayList<Ooze> oozes;
+
+	// Others
+	private HUD hud;
+	private ArrayList<Body> alarms;
+	private float timer;
+
+	// Debugging
 	private Box2DDebugRenderer b2dr;
 	private ShapeRenderer shapeRenderer;
 
@@ -65,6 +73,7 @@ public class PlayScreen extends MyScreen {
 		shapeRenderer = new ShapeRenderer();
 		width = getWidth();
 		height = getHeight();
+		hud = new HUD(getViewport());
 	}
 
 	/**
@@ -219,6 +228,7 @@ public class PlayScreen extends MyScreen {
 		}
 
 		playerTest.update(delta);
+		hud.getStage().draw();
 	}
 
 	@Override
