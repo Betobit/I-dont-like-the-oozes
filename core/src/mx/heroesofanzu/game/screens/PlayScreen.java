@@ -1,6 +1,8 @@
 package mx.heroesofanzu.game.screens;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -48,6 +50,7 @@ public class PlayScreen extends MyScreen {
 	// Map
 	private TiledMap tiledMap;
 	private TiledMapRenderer tiledMapRenderer;
+	private ArrayList<Sprite> coins;
 
 	// Entities
 	private Player playerTest;
@@ -154,7 +157,17 @@ public class PlayScreen extends MyScreen {
 		// Define enemies.
 		oozes = new ArrayList<Ooze>();
 
-		// Set box2d bodies.
+		// Set coins
+		coins = new ArrayList<Sprite>();
+		for(MapObject object : tiledMap.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
+			Rectangle rect = ((RectangleMapObject) object).getRectangle();
+			Sprite s = new Sprite(new Texture("GoldCoinSprite/coin1.png"));
+			s.setPosition(rect.getX() + 4, rect.getY() + 4);
+			s.setSize(8, 10);
+			coins.add(s);
+		}
+
+			// Set box2d bodies.
 		createBodies(4, BodyDef.BodyType.StaticBody);
 		alarms = createBodies(3, BodyDef.BodyType.KinematicBody);
 		setAlarms();
@@ -198,6 +211,13 @@ public class PlayScreen extends MyScreen {
 		for(Body a : alarms) {
 			a.setTransform(a.getWorldCenter(), a.getAngle() + 0.08f);
 		}
+
+		// Draw coins
+		batch.begin();
+		for(Sprite s : coins) {
+			s.draw(batch);
+		}
+		batch.end();
 
 		timer+=delta;
 
