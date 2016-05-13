@@ -16,11 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.ContactImpulse;
-import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -164,6 +160,7 @@ public class PlayScreen extends MyScreen {
 			Sprite s = new Sprite(new Texture("GoldCoinSprite/coin1.png"));
 			s.setPosition(rect.getX() + 4, rect.getY() + 4);
 			s.setSize(8, 10);
+			s.setAlpha(0.5f);
 			coins.add(s);
 		}
 
@@ -175,27 +172,6 @@ public class PlayScreen extends MyScreen {
 		// Set player.
 		playerTest = new Player(this, width / 2, height / 2);
 		attachLightToBody(playerTest.getBody(), Color.CHARTREUSE, 80);
-
-		world.setContactListener(new ContactListener() {
-			@Override
-			public void beginContact(Contact contact) {
-				// Check to see if the collision is between the second sprite and the bottom of the screen
-				// If so apply a random amount of upward force to both objects... just because
-			}
-
-			@Override
-			public void endContact(Contact contact) {
-			}
-
-			@Override
-			public void preSolve(Contact contact, Manifold oldManifold) {
-			}
-
-			@Override
-			public void postSolve(Contact contact, ContactImpulse impulse) {
-			}
-		});
-
 	}
 
 	@Override
@@ -214,10 +190,16 @@ public class PlayScreen extends MyScreen {
 
 		// Draw coins
 		batch.begin();
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 		for(Sprite s : coins) {
 			s.draw(batch);
+			if (Constants.DEBUGGING) {
+				Rectangle rect = s.getBoundingRectangle();
+				shapeRenderer.rect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+			}
 		}
 		batch.end();
+		shapeRenderer.end();
 
 		timer+=delta;
 
@@ -229,19 +211,20 @@ public class PlayScreen extends MyScreen {
 
 		// Iterate all oozes.
 		Iterator<Ooze> iterator = oozes.iterator();
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 		while(iterator.hasNext()) {
 			Ooze o = iterator.next();
 
 			if(Constants.DEBUGGING) {
 				Rectangle rect = o.getBoundingRectangle();
-				shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 				shapeRenderer.rect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
 				shapeRenderer.rect(playerTest.getX(), playerTest.getY(), playerTest.getWidth(), playerTest.getHeight());
-				shapeRenderer.end();
 				//Gdx.app.log("Player", String.format("x: %2f y:%2f", playerTest.getX(), playerTest.getY()));
 			}
 			o.update(delta);
 		}
+		shapeRenderer.end();
+
 
 		if(Constants.DEBUGGING) {
 			b2dr.render(world, getCamera().combined);
