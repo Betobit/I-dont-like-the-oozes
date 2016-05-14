@@ -1,6 +1,5 @@
 package mx.heroesofanzu.game.scenes;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -16,20 +15,20 @@ import com.sun.media.jfxmediaimpl.MediaDisposer;
  */
 public class Hud implements MediaDisposer.Disposable {
 
-	public static final int PAD_TOP = 10;
+	public static final int PADDING = 10;
 	private Stage stage;
 	private Table table;
 
 	private Label timeLabel;
-    private Label timeCountLabel;
 	private Label scoreLabel;
-    private Label scoreCountLabel;
 
 	private Integer score;
 	private float timeCount;
+	private int worldTimer;
 
 	public Hud(Viewport viewport) {
-		timeCount = 0f;
+		worldTimer = 250;
+		timeCount = 0;
 		score = 0;
 
 		stage = new Stage(viewport);
@@ -37,16 +36,12 @@ public class Hud implements MediaDisposer.Disposable {
 		table.top().left();
 		table.setFillParent(true);
 
-		timeLabel = new Label("Time:  ",new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-		timeCountLabel = new Label(getStringTimer(), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-		scoreLabel = new Label("Score:  ",new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-		scoreCountLabel = new Label(score.toString(),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+		timeLabel = new Label(String.format("Time:  %03d", worldTimer),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+		scoreLabel = new Label(String.format("Score: %04d ", score),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
-		table.add(timeLabel).top().left().padTop(PAD_TOP).padRight(250);
-        table.add(scoreLabel).top().right().padTop(PAD_TOP);
+		table.add(timeLabel).top().left().pad(PADDING).expandX();
+        table.add(scoreLabel).top().right().pad(PADDING);
         table.row().width(50);
-        table.add(timeCountLabel).top().left().padTop(-PAD_TOP / 3).padRight(250).width(100);
-		table.add(scoreCountLabel).top().right().padTop(-PAD_TOP / 3);
 
 		stage.addActor(table);
 
@@ -66,20 +61,18 @@ public class Hud implements MediaDisposer.Disposable {
     /**
      * update timeCount with timer of PlayScreen
      * update timeCountLabel with getStringTimer
-     * @param timer
+     * @param dt Delta time
      */
-	public void updateTime(float timer){
-        timeCount+=timer/500;
-		timeCountLabel.setText(getStringTimer());
-	}
+	public void updateTime(float dt){
+        timeCount += dt;
+		if(timeCount >= 1) {
+			if(worldTimer > 0) {
+				worldTimer--;
+			}
 
-    /**
-     * this method works together with updateTimer, making timeCount in a String for label
-     * @return a toString of timeCount casted in a integer
-     */
-	public String getStringTimer(){
-		Integer i = (int)timeCount;
-		return i.toString();
+			timeLabel.setText(String.format("Time: %03d", worldTimer));
+			timeCount = 0;
+		}
 	}
 
 	@Override

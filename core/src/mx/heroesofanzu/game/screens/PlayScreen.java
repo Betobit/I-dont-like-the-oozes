@@ -231,7 +231,7 @@ public class PlayScreen extends MyScreen {
 		}
 
 		playerTest.update(delta);
-		hud.updateTime(timer);
+		hud.updateTime(delta);
 		hud.getStage().draw();
 	}
 
