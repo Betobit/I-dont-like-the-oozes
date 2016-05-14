@@ -34,7 +34,6 @@ public abstract class Entity extends Sprite {
 		this.world = screen.getWorld();
 		this.batch = screen.getGame().getBatch();
 		setPosition(x, y);
-		setSize(24, 25);
 
 		BodyDef bdef = new BodyDef();
 		FixtureDef fdef = new FixtureDef();
@@ -60,10 +59,11 @@ public abstract class Entity extends Sprite {
 		duration += delta;
 		TextureRegion frame = bodyAnimation.getKeyFrame(duration, true);
 
-		setX(getBody().getPosition().x);
-		setY(getBody().getPosition().y);
+		setX(getBody().getPosition().x - getWidth() / 2);
+		setY(getBody().getPosition().y - getHeight() / 2);
+		setBounds(getX(), getY(), 16, 16);
 		batch.begin();
-		batch.draw(frame, getX() - 12, getY() - 6, 24, 25);
+		batch.draw(frame, getX(), getY(), 24, 25);
 		batch.end();
 	}
 

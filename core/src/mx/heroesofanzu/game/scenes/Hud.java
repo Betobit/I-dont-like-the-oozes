@@ -36,8 +36,11 @@ public class Hud implements MediaDisposer.Disposable {
 		table.top().left();
 		table.setFillParent(true);
 
-		timeLabel = new Label(String.format("Time:  %03d", worldTimer),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-		scoreLabel = new Label(String.format("Score: %04d ", score),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+		timeLabel = new Label(String.format("Time:  %03d", worldTimer), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+		scoreLabel = new Label(String.format("Score: %04d ", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+
+		timeLabel.setFontScale(0.5f);
+		scoreLabel.setFontScale(0.5f);
 
 		table.add(timeLabel).top().left().pad(PADDING).expandX();
         table.add(scoreLabel).top().right().pad(PADDING);

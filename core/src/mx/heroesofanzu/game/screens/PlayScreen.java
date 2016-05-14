@@ -164,7 +164,7 @@ public class PlayScreen extends MyScreen {
 			coins.add(s);
 		}
 
-			// Set box2d bodies.
+		// Set box2d bodies.
 		createBodies(4, BodyDef.BodyType.StaticBody);
 		alarms = createBodies(3, BodyDef.BodyType.KinematicBody);
 		setAlarms();
@@ -190,21 +190,20 @@ public class PlayScreen extends MyScreen {
 
 		// Draw coins
 		batch.begin();
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-		for(Sprite s : coins) {
+		Iterator<Sprite> coinsIterator = coins.iterator();
+		while(coinsIterator.hasNext()) {
+			Sprite s = coinsIterator.next();
 			s.draw(batch);
-			if (Constants.DEBUGGING) {
-				Rectangle rect = s.getBoundingRectangle();
-				shapeRenderer.rect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+			if(s.getBoundingRectangle().overlaps(playerTest.getBoundingRectangle())) {
+				coinsIterator.remove();
 			}
 		}
 		batch.end();
-		shapeRenderer.end();
 
 		timer+=delta;
 
 		// Create ooze every 4 seconds.
-		if (timer >= 4 && oozes.size() < 2) {
+		if (timer >= 4 && oozes.size() < 8) {
 			timer-= 4;
 			oozes.add(new Ooze(this, MathUtils.random(width - 10), MathUtils.random(height)));
 		}
@@ -215,11 +214,15 @@ public class PlayScreen extends MyScreen {
 		while(iterator.hasNext()) {
 			Ooze o = iterator.next();
 
+			if(o.getBoundingRectangle().overlaps(playerTest.getBoundingRectangle())) {
+				world.destroyBody(o.getBody());
+				iterator.remove();
+			}
+
 			if(Constants.DEBUGGING) {
 				Rectangle rect = o.getBoundingRectangle();
 				shapeRenderer.rect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
 				shapeRenderer.rect(playerTest.getX(), playerTest.getY(), playerTest.getWidth(), playerTest.getHeight());
-				//Gdx.app.log("Player", String.format("x: %2f y:%2f", playerTest.getX(), playerTest.getY()));
 			}
 			o.update(delta);
 		}
