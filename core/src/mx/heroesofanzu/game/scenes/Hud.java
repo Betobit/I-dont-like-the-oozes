@@ -11,7 +11,7 @@ import com.sun.media.jfxmediaimpl.MediaDisposer;
 /**
  * Created by jesusmartinez on 10/05/16.
  * Modified by carlossuarez on 5/05/16.
- * Represents the HUD of the game by all the relevant information
+ * Represents the Hud of the game by all the relevant information
  */
 public class Hud implements MediaDisposer.Disposable {
 
@@ -22,9 +22,9 @@ public class Hud implements MediaDisposer.Disposable {
 	private Label timeLabel;
 	private Label scoreLabel;
 
-	private Integer score;
 	private float timeCount;
 	private int worldTimer;
+	private int score;
 
 	public Hud(Viewport viewport) {
 		worldTimer = 250;
@@ -55,6 +55,13 @@ public class Hud implements MediaDisposer.Disposable {
 	}
 
 	/**
+	 * Add one to the score
+	 */
+	public void tickScore() {
+		score++;
+	}
+
+	/**
 	 * return The stage
 	 */
 	public Stage getStage() {
@@ -62,20 +69,22 @@ public class Hud implements MediaDisposer.Disposable {
 	}
 
     /**
-     * update timeCount with timer of PlayScreen
-     * update timeCountLabel with getStringTimer
+     * Update timeCount and score.
      * @param dt Delta time
      */
-	public void updateTime(float dt){
+	public void update(float dt){
         timeCount += dt;
 		if(timeCount >= 1) {
 			if(worldTimer > 0) {
 				worldTimer--;
 			}
 
-			timeLabel.setText(String.format("Time: %03d", worldTimer));
 			timeCount = 0;
 		}
+
+		timeLabel.setText(String.format("Time: %03d", worldTimer));
+		scoreLabel.setText(String.format("Score: %04d ", score));
+		stage.draw();
 	}
 
 	@Override

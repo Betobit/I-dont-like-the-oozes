@@ -47,6 +47,7 @@ public class PlayScreen extends MyScreen {
 	private TiledMap tiledMap;
 	private TiledMapRenderer tiledMapRenderer;
 	private ArrayList<Sprite> coins;
+	private ArrayList<Sprite> powerUps;
 
 	// Entities
 	private Player playerTest;
@@ -153,16 +154,28 @@ public class PlayScreen extends MyScreen {
 		// Define enemies.
 		oozes = new ArrayList<Ooze>();
 
-		// Set coins
+		// Set coins.
 		coins = new ArrayList<Sprite>();
 		for(MapObject object : tiledMap.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
 			Rectangle rect = ((RectangleMapObject) object).getRectangle();
 			Sprite s = new Sprite(new Texture("GoldCoinSprite/coin1.png"));
 			s.setPosition(rect.getX() + 4, rect.getY() + 4);
-			s.setSize(8, 10);
+			s.setSize(10, 10);
 			s.setAlpha(0.5f);
 			coins.add(s);
 		}
+
+		// Set power ups.
+		powerUps = new ArrayList<Sprite>();
+		for(MapObject object : tiledMap.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)) {
+			Rectangle rect = ((RectangleMapObject) object).getRectangle();
+			Sprite s = new Sprite(new Texture("powerup.png"));
+			s.setPosition(rect.getX(), rect.getY());
+			s.setSize(14, 14);
+			powerUps.add(s);
+		}
+
+
 
 		// Set box2d bodies.
 		createBodies(4, BodyDef.BodyType.StaticBody);
@@ -177,6 +190,7 @@ public class PlayScreen extends MyScreen {
 	@Override
 	public void render(float delta) {
 		super.render(delta);
+		timer+=delta;
 
 		tiledMapRenderer.setView(getCamera());
 		tiledMapRenderer.render();
@@ -188,19 +202,30 @@ public class PlayScreen extends MyScreen {
 			a.setTransform(a.getWorldCenter(), a.getAngle() + 0.08f);
 		}
 
+		// Draw power ups
+		batch.begin();
+		Iterator<Sprite> powerIterator = powerUps.iterator();
+		while(powerIterator.hasNext()) {
+			Sprite s = powerIterator.next();
+			s.draw(batch);
+		}
+		batch.end();
+
+
 		// Draw coins
 		batch.begin();
 		Iterator<Sprite> coinsIterator = coins.iterator();
 		while(coinsIterator.hasNext()) {
 			Sprite s = coinsIterator.next();
 			s.draw(batch);
-			if(s.getBoundingRectangle().overlaps(playerTest.getBoundingRectangle())) {
+			
+			if(playerTest.getBoundingRectangle().contains(s.getBoundingRectangle())) {
+				hud.tickScore();
 				coinsIterator.remove();
+				s.getTexture().dispose();
 			}
 		}
 		batch.end();
-
-		timer+=delta;
 
 		// Create ooze every 4 seconds.
 		if (timer >= 4 && oozes.size() < 8) {
@@ -234,8 +259,7 @@ public class PlayScreen extends MyScreen {
 		}
 
 		playerTest.update(delta);
-		hud.updateTime(delta);
-		hud.getStage().draw();
+		//hud.update(delta);
 	}
 
 	@Override
