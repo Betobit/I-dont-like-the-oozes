@@ -1,12 +1,17 @@
 package mx.heroesofanzu.game.scenes;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sun.media.jfxmediaimpl.MediaDisposer;
+
+import mx.heroesofanzu.game.screens.PlayScreen;
 
 /**
  * Created by jesusmartinez on 10/05/16.
@@ -25,8 +30,11 @@ public class Hud implements MediaDisposer.Disposable {
 	private float timeCount;
 	private int worldTimer;
 	private int score;
+	private Sprite bubble;
+	private SpriteBatch batch;
 
-	public Hud(Viewport viewport) {
+	public Hud(Viewport viewport, SpriteBatch batch) {
+		this.batch = batch;
 		worldTimer = 250;
 		timeCount = 0;
 		score = 0;
@@ -49,9 +57,20 @@ public class Hud implements MediaDisposer.Disposable {
 		stage.addActor(table);
 
 		setLifeBar();
+		drawPowerUpBubble();
 	}
 
 	public void setLifeBar() {
+	}
+
+	/**
+	 * Draw power up container
+	 */
+	private void drawPowerUpBubble() {
+		Texture texture = new Texture("bubble.png");
+		bubble = new Sprite(texture);
+		bubble.setSize(40, 40);
+		bubble.setPosition(350, 10);
 	}
 
 	/**
@@ -59,13 +78,6 @@ public class Hud implements MediaDisposer.Disposable {
 	 */
 	public void tickScore() {
 		score++;
-	}
-
-	/**
-	 * return The stage
-	 */
-	public Stage getStage() {
-		return stage;
 	}
 
     /**
@@ -85,6 +97,10 @@ public class Hud implements MediaDisposer.Disposable {
 		timeLabel.setText(String.format("Time: %03d", worldTimer));
 		scoreLabel.setText(String.format("Score: %04d ", score));
 		stage.draw();
+
+		batch.begin();
+		bubble.draw(batch);
+		batch.end();
 	}
 
 	@Override

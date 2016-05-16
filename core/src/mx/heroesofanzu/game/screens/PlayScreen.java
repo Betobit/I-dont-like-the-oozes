@@ -1,5 +1,7 @@
 package mx.heroesofanzu.game.screens;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -55,6 +57,7 @@ public class PlayScreen extends MyScreen {
 
 	// Others
 	private Hud hud;
+	private Sound popSound;
 	private ArrayList<Body> alarms;
 	private float timer;
 
@@ -73,7 +76,8 @@ public class PlayScreen extends MyScreen {
 		shapeRenderer = new ShapeRenderer();
 		width = getWidth();
 		height = getHeight();
-		hud = new Hud(getViewport());
+		popSound = Gdx.audio.newSound(Gdx.files.internal("sounds/pop.mp3"));
+		hud = new Hud(getViewport(), batch);
 	}
 
 	/**
@@ -175,8 +179,6 @@ public class PlayScreen extends MyScreen {
 			powerUps.add(s);
 		}
 
-
-
 		// Set box2d bodies.
 		createBodies(4, BodyDef.BodyType.StaticBody);
 		alarms = createBodies(3, BodyDef.BodyType.KinematicBody);
@@ -222,7 +224,7 @@ public class PlayScreen extends MyScreen {
 			if(playerTest.getBoundingRectangle().contains(s.getBoundingRectangle())) {
 				hud.tickScore();
 				coinsIterator.remove();
-				s.getTexture().dispose();
+				popSound.play(0.08f);
 			}
 		}
 		batch.end();
@@ -259,12 +261,13 @@ public class PlayScreen extends MyScreen {
 		}
 
 		playerTest.update(delta);
-		//hud.update(delta);
+		hud.update(delta);
 	}
 
 	@Override
 	public void dispose() {
 		rayHandler.dispose();
 		tiledMap.dispose();
+		popSound.dispose();
 	}
 }
