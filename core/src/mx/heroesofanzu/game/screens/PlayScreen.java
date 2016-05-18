@@ -153,7 +153,7 @@ public class PlayScreen extends MyScreen {
 
 		// Set light world.
 		rayHandler = new RayHandler(world);
-		rayHandler.setAmbientLight(0.4f);
+		rayHandler.setAmbientLight(0.6f);
 
 		// Define enemies.
 		oozes = new ArrayList<Ooze>();
@@ -211,11 +211,8 @@ public class PlayScreen extends MyScreen {
 			Sprite s = powerIterator.next();
 			s.draw(batch);
 		}
-		batch.end();
-
 
 		// Draw coins
-		batch.begin();
 		Iterator<Sprite> coinsIterator = coins.iterator();
 		while(coinsIterator.hasNext()) {
 			Sprite s = coinsIterator.next();
@@ -237,7 +234,6 @@ public class PlayScreen extends MyScreen {
 
 		// Iterate all oozes.
 		Iterator<Ooze> iterator = oozes.iterator();
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 		while(iterator.hasNext()) {
 			Ooze o = iterator.next();
 
@@ -247,13 +243,14 @@ public class PlayScreen extends MyScreen {
 			}
 
 			if(Constants.DEBUGGING) {
+				shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 				Rectangle rect = o.getBoundingRectangle();
 				shapeRenderer.rect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
 				shapeRenderer.rect(playerTest.getX(), playerTest.getY(), playerTest.getWidth(), playerTest.getHeight());
+				shapeRenderer.end();
 			}
 			o.update(delta);
 		}
-		shapeRenderer.end();
 
 
 		if(Constants.DEBUGGING) {

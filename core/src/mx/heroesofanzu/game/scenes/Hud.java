@@ -11,7 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sun.media.jfxmediaimpl.MediaDisposer;
 
-import mx.heroesofanzu.game.screens.PlayScreen;
+import java.util.ArrayList;
+
+import mx.heroesofanzu.game.powerups.PowerUp;
 
 /**
  * Created by jesusmartinez on 10/05/16.
@@ -30,21 +32,28 @@ public class Hud implements MediaDisposer.Disposable {
 	private float timeCount;
 	private int worldTimer;
 	private int score;
-	private Sprite bubble;
 	private SpriteBatch batch;
+
+	private Sprite bubble;
+	private ArrayList<PowerUp> powerUps;
 
 	public Hud(Viewport viewport, SpriteBatch batch) {
 		this.batch = batch;
+		powerUps = new ArrayList<PowerUp>();
 		worldTimer = 250;
 		timeCount = 0;
 		score = 0;
+
+		setLifeBar();
+		drawPowerUpBubble();
+		setPowerUps();
 
 		stage = new Stage(viewport);
 		table = new Table();
 		table.top().left();
 		table.setFillParent(true);
 
-		timeLabel = new Label(String.format("Time:  %03d", worldTimer), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+		timeLabel = new Label(String.format("Time: \n  %03d", worldTimer), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 		scoreLabel = new Label(String.format("Score: %04d ", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
 		timeLabel.setFontScale(0.5f);
@@ -55,9 +64,16 @@ public class Hud implements MediaDisposer.Disposable {
         table.row().width(50);
 
 		stage.addActor(table);
+	}
 
-		setLifeBar();
-		drawPowerUpBubble();
+	/**
+	 * Set power ups
+	 */
+	private void setPowerUps() {
+		float xCenter = bubble.getX() + bubble.getWidth() / 6;
+		float yCenter = bubble.getY() + bubble.getHeight() / 6;
+		//powerUps.add(new PowerUp("velocity.png", xCenter, yCenter, 25, 25));
+		powerUps.add(new PowerUp("life.png", xCenter, yCenter, 25, 25));
 	}
 
 	public void setLifeBar() {
@@ -70,7 +86,7 @@ public class Hud implements MediaDisposer.Disposable {
 		Texture texture = new Texture("bubble.png");
 		bubble = new Sprite(texture);
 		bubble.setSize(40, 40);
-		bubble.setPosition(350, 10);
+		bubble.setPosition(350, 195);
 	}
 
 	/**
@@ -96,9 +112,11 @@ public class Hud implements MediaDisposer.Disposable {
 
 		timeLabel.setText(String.format("Time: %03d", worldTimer));
 		scoreLabel.setText(String.format("Score: %04d ", score));
-		stage.draw();
 
 		batch.begin();
+		for(PowerUp p : powerUps) {
+			p.draw(batch);
+		}
 		bubble.draw(batch);
 		batch.end();
 	}
