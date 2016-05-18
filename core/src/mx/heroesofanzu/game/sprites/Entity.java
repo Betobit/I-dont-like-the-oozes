@@ -34,7 +34,14 @@ public abstract class Entity extends Sprite {
 		this.world = screen.getWorld();
 		this.batch = screen.getGame().getBatch();
 		setPosition(x, y);
+		defineBox2dBody();
+		defineSpriteSheet();
+	}
 
+	/**
+	 * Define box2d body for the entity.
+	 */
+	private void defineBox2dBody() {
 		BodyDef bdef = new BodyDef();
 		FixtureDef fdef = new FixtureDef();
 		bdef.type = BodyDef.BodyType.DynamicBody;
@@ -47,8 +54,6 @@ public abstract class Entity extends Sprite {
 		fdef.density = 0f;
 		fdef.restitution = 0f;
 		body.createFixture(fdef);
-
-		defineSpriteSheet();
 	}
 
 	/**

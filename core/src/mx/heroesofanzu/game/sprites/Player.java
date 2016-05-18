@@ -15,16 +15,20 @@ import mx.heroesofanzu.game.util.DirectionGestureDetector;
 public class Player extends Entity {
 	
     private Vector2 direction;
+	private int velocity;
 
 	public Player(PlayScreen screen, float x, float y) {
 		super(screen, x, y);
 		direction = new Vector2(16f, 0);
+		velocity = 0;
 	}
 
-	@Override
-	public void update(float delta) {
-		super.update(delta);
-		getBody().setLinearVelocity(direction.x, direction.y);
+	/**
+	 * More velocity
+	 * @param velocity Velocity added
+	 */
+	public void setVelocity(int velocity) {
+		this.velocity = velocity;
 	}
 
 	/**
@@ -41,26 +45,33 @@ public class Player extends Entity {
 		return getBody().getPosition().y;
 	}
 
+	@Override
+	public void update(float delta) {
+		super.update(delta);
+		getBody().setLinearVelocity(direction.x, direction.y);
+
+	}
+
 	private void setPlayerGestures() {
 		Gdx.input.setInputProcessor(new DirectionGestureDetector(new DirectionGestureDetector.DirectionListener() {
 			@Override
 			public void onUp() {
-				direction.set(0, 50);
+				direction.set(0, 50 + velocity);
 			}
 
 			@Override
 			public void onRight() {
-				direction.set(50, 0);
+				direction.set(50 + velocity, 0);
 			}
 
 			@Override
 			public void onLeft() {
-				direction.set(-50, 0);
+				direction.set(-50 - velocity, 0);
 			}
 
 			@Override
 			public void onDown() {
-				direction.set(0, -50);
+				direction.set(0, -50 - velocity);
 			}
 		}));
 	}

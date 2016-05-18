@@ -33,6 +33,7 @@ import mx.heroesofanzu.game.HeroesOfAnzu;
 import mx.heroesofanzu.game.scenes.Hud;
 import mx.heroesofanzu.game.sprites.Player;
 import mx.heroesofanzu.game.sprites.enemies.Ooze;
+import mx.heroesofanzu.game.sprites.powerups.PowerUp;
 
 /**
  * Created by jesusmartinez on 25/03/16.
@@ -210,6 +211,10 @@ public class PlayScreen extends MyScreen {
 		while(powerIterator.hasNext()) {
 			Sprite s = powerIterator.next();
 			s.draw(batch);
+			if (playerTest.getBoundingRectangle().contains(s.getBoundingRectangle())) {
+				hud.setPowerUp(new PowerUp("velocity.png", true));
+				//playerTest.applyPowerUp();
+			}
 		}
 
 		// Draw coins
