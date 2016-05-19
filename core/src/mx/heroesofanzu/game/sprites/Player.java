@@ -79,11 +79,11 @@ public class Player extends Entity {
 	@Override
 	protected void defineSpriteSheet() {
 		TextureRegion[] frames = new TextureRegion[6];
-		for(int i=0; i < 6; i++) {
-			setSpriteSheet(new Texture("GoldCoinSprite/coin" + (i + 1) + ".png"));
-			setTextureRegion(new TextureRegion(getSpriteSheet(), 30, 30));
+		for(int i = 0; i < 6; i++) {
+			setSpriteSheet(new Texture("player/player_" + (i + 1) + ".png"));
+			setTextureRegion(new TextureRegion(getSpriteSheet(), 70, 70));
 			frames[i] = getTextureRegion();
-			setBodyAnimation(new Animation(0.1f, frames));
+			setBodyAnimation(new Animation(0.06f, frames));
 		}
         setPlayerGestures();
 	}
