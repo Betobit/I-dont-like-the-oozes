@@ -39,7 +39,7 @@ public class Hud implements MediaDisposer.Disposable {
 		this.batch = batch;
 		score = 0;
 
-		hpBar = new HealthPool(140, 205, batch);
+		hpBar = new HealthPool(2, 200, batch);
 
 		setLifeBar();
 		drawPowerUpBubble();
@@ -52,10 +52,11 @@ public class Hud implements MediaDisposer.Disposable {
 
 		scoreLabel = new Label(String.format("Score: %04d ", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 		scoreLabel.setFontScale(0.5f);
+		table.add(scoreLabel).top().right().pad(PADDING).padRight(50).row();
 
-		table.add(hpBar.getHpLabel()).top().width(stage.getWidth() - hpBar.getHpX()).height(stage.getHeight()-hpBar.getHpY()).pad(PADDING);
+		table.add(hpBar.getHpLabel()).top().left().padTop(-25).width(stage.getWidth() - hpBar.getHpX()).height(stage.getHeight()-hpBar.getHpY());
 
-		table.add(scoreLabel).top().right().pad(PADDING).padRight(50);
+
         table.row().width(50);
 
 		stage.addActor(table);
