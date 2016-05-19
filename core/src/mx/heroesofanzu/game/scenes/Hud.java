@@ -38,10 +38,8 @@ public class Hud implements MediaDisposer.Disposable {
 	public Hud(Viewport viewport, SpriteBatch batch) {
 		this.batch = batch;
 		score = 0;
-
 		hpBar = new HealthPool(2, 200, batch);
 
-		setLifeBar();
 		drawPowerUpBubble();
 
 		stage = new Stage(viewport);
@@ -60,9 +58,6 @@ public class Hud implements MediaDisposer.Disposable {
         table.row().width(50);
 
 		stage.addActor(table);
-	}
-
-	public void setLifeBar() {
 	}
 
 	/**

@@ -48,9 +48,9 @@ public class PlayScreen extends MyScreen {
 
 	// Map
 	private TiledMap tiledMap;
-	private TiledMapRenderer tiledMapRenderer;
 	private ArrayList<Sprite> coins;
 	private ArrayList<Sprite> powerUps;
+	private Sprite mapSprite;
 
 	// Entities
 	private Player playerTest;
@@ -110,7 +110,7 @@ public class PlayScreen extends MyScreen {
 		for(Body b : alarms) {
 			ConeLight coneLight = new ConeLight(rayHandler, 200, Color.RED, 60, width/2, height/2,0, 40);
 			coneLight.attachToBody(b);
-			attachLightToBody(b, Color.CORAL, 40);
+			attachLightToBody(b, Color.YELLOW, 40);
 			b.setActive(false);
 		}
 	}
@@ -149,12 +149,14 @@ public class PlayScreen extends MyScreen {
 	public void show() {
 		// Load map and world.
 		tiledMap = new TmxMapLoader().load("level1.tmx");
-		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, batch);
 		world = new World(new Vector2(0, 0), true);
+		Texture textureMap = new Texture("map.png");
+		mapSprite = new Sprite(textureMap);
+		mapSprite.setSize(width, height);
 
 		// Set light world.
 		rayHandler = new RayHandler(world);
-		rayHandler.setAmbientLight(0.6f);
+		rayHandler.setAmbientLight(0.7f);
 
 		// Define enemies.
 		oozes = new ArrayList<Ooze>();
@@ -166,7 +168,7 @@ public class PlayScreen extends MyScreen {
 			Sprite s = new Sprite(new Texture("GoldCoinSprite/coin1.png"));
 			s.setPosition(rect.getX() + 4, rect.getY() + 4);
 			s.setSize(10, 10);
-			s.setAlpha(0.5f);
+			s.setAlpha(0.8f);
 			coins.add(s);
 		}
 
@@ -187,19 +189,14 @@ public class PlayScreen extends MyScreen {
 
 		// Set player.
 		playerTest = new Player(this, width / 2, height / 2);
-		attachLightToBody(playerTest.getBody(), Color.CHARTREUSE, 80);
+		attachLightToBody(playerTest.getBody(), Color.PINK, 80);
 	}
 
 	@Override
 	public void render(float delta) {
 		super.render(delta);
 		timer+=delta;
-
-		tiledMapRenderer.setView(getCamera());
-		tiledMapRenderer.render();
 		world.step(delta, 6, 2);
-		rayHandler.setCombinedMatrix(getCamera());
-		rayHandler.updateAndRender();
 
 		for(Body a : alarms) {
 			a.setTransform(a.getWorldCenter(), a.getAngle() + 0.08f);
@@ -207,6 +204,7 @@ public class PlayScreen extends MyScreen {
 
 		// Draw power ups
 		batch.begin();
+		mapSprite.draw(batch);
 		Iterator<Sprite> powerIterator = powerUps.iterator();
 		while(powerIterator.hasNext()) {
 			Sprite s = powerIterator.next();
@@ -224,7 +222,7 @@ public class PlayScreen extends MyScreen {
 			s.draw(batch);
 			
 			if(playerTest.getBoundingRectangle().contains(s.getBoundingRectangle())) {
-				hud.tickScore();
+				//hud.tickScore();
 				coinsIterator.remove();
 				popSound.play(0.08f);
 			}
@@ -263,6 +261,8 @@ public class PlayScreen extends MyScreen {
 			b2dr.render(world, getCamera().combined);
 		}
 
+		rayHandler.setCombinedMatrix(getCamera());
+		rayHandler.updateAndRender();
 		playerTest.update(delta);
 		hud.update(delta);
 	}
