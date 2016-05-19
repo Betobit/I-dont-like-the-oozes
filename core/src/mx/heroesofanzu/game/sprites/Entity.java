@@ -20,7 +20,7 @@ public abstract class Entity extends Sprite {
 
 	private World world;
 
-	private Animation bodyAnimation;
+	protected Animation animation;
 	private Texture spriteSheet;
 	private TextureRegion textureRegion;
 
@@ -62,10 +62,10 @@ public abstract class Entity extends Sprite {
 	 */
 	protected void update(float delta) {
 		duration += delta;
-		TextureRegion frame = bodyAnimation.getKeyFrame(duration, true);
+		TextureRegion frame = animation.getKeyFrame(duration, true);
 
-		setX(getBody().getPosition().x - getWidth() / 2);
-		setY(getBody().getPosition().y - getHeight() / 2);
+		setX(getBody().getPosition().x - getWidth() / 2 - 1);
+		setY(getBody().getPosition().y - getHeight() / 2 - 1);
 		setBounds(getX(), getY(), 16, 16);
 		batch.begin();
 		batch.draw(frame, getX(), getY(), 16, 16);
@@ -85,10 +85,10 @@ public abstract class Entity extends Sprite {
 	}
 
 	/**
-	 * @param bodyAnimation
+	 * @param animation
 	 */
-	public void setBodyAnimation(Animation bodyAnimation) {
-        	this.bodyAnimation = bodyAnimation;
+	public void setAnimation(Animation animation) {
+        	this.animation = animation;
     	}
 	
 	/**

@@ -24,8 +24,8 @@ public class Player extends Entity {
 	}
 
 	/**
-	 * More velocity
-	 * @param velocity Velocity added
+	 * Set velocity
+	 * @param velocity New Velocity
 	 */
 	public void setVelocity(int velocity) {
 		this.velocity = velocity;
@@ -49,7 +49,6 @@ public class Player extends Entity {
 	public void update(float delta) {
 		super.update(delta);
 		getBody().setLinearVelocity(direction.x, direction.y);
-
 	}
 
 	private void setPlayerGestures() {
@@ -83,7 +82,7 @@ public class Player extends Entity {
 			setSpriteSheet(new Texture("player/player_" + (i + 1) + ".png"));
 			setTextureRegion(new TextureRegion(getSpriteSheet(), 70, 70));
 			frames[i] = getTextureRegion();
-			setBodyAnimation(new Animation(0.06f, frames));
+			setAnimation(new Animation(0.06f, frames));
 		}
         setPlayerGestures();
 	}

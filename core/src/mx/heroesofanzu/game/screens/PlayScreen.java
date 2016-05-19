@@ -78,7 +78,7 @@ public class PlayScreen extends MyScreen {
 		width = getWidth();
 		height = getHeight();
 		popSound = Gdx.audio.newSound(Gdx.files.internal("sounds/pop.mp3"));
-		hud = new Hud(getViewport(), batch);
+		//hud = new Hud(getViewport(), batch);
 	}
 
 	/**
@@ -168,7 +168,7 @@ public class PlayScreen extends MyScreen {
 			Sprite s = new Sprite(new Texture("coin.png"));
 			s.setPosition(rect.getX() + 4, rect.getY() + 4);
 			s.setSize(10, 10);
-			s.setAlpha(0.8f);
+			s.setAlpha(0.95f);
 			coins.add(s);
 		}
 
@@ -178,7 +178,7 @@ public class PlayScreen extends MyScreen {
 			Rectangle rect = ((RectangleMapObject) object).getRectangle();
 			Sprite s = new Sprite(new Texture("powerup.png"));
 			s.setPosition(rect.getX(), rect.getY());
-			s.setSize(14, 14);
+			s.setSize(12, 12);
 			powerUps.add(s);
 		}
 
@@ -209,9 +209,10 @@ public class PlayScreen extends MyScreen {
 		while(powerIterator.hasNext()) {
 			Sprite s = powerIterator.next();
 			s.draw(batch);
-			if (playerTest.getBoundingRectangle().contains(s.getBoundingRectangle())) {
-				hud.setPowerUp(new PowerUp("velocity.png", true));
+			if (playerTest.getBoundingRectangle().overlaps(s.getBoundingRectangle())) {
+				//hud.setPowerUp(new PowerUp("velocity.png", true));
 				//playerTest.applyPowerUp();
+				powerIterator.remove();
 			}
 		}
 
@@ -221,7 +222,7 @@ public class PlayScreen extends MyScreen {
 			Sprite s = coinsIterator.next();
 			s.draw(batch);
 			
-			if(playerTest.getBoundingRectangle().contains(s.getBoundingRectangle())) {
+			if(playerTest.getBoundingRectangle().overlaps(s.getBoundingRectangle())) {
 				//hud.tickScore();
 				coinsIterator.remove();
 				popSound.play(0.08f);
@@ -242,7 +243,7 @@ public class PlayScreen extends MyScreen {
 
 			if(o.getBoundingRectangle().overlaps(playerTest.getBoundingRectangle())) {
 				world.destroyBody(o.getBody());
-				hud.getHpBar().healthReduction(20);
+				//hud.getHpBar().healthReduction(20);
 				iterator.remove();
 			}
 
@@ -264,7 +265,7 @@ public class PlayScreen extends MyScreen {
 		rayHandler.setCombinedMatrix(getCamera());
 		rayHandler.updateAndRender();
 		playerTest.update(delta);
-		hud.update(delta);
+		//hud.update(delta);
 	}
 
 	@Override
