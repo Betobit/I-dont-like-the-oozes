@@ -33,9 +33,13 @@ public class Hud implements MediaDisposer.Disposable {
 	private Sprite bubble;
 	private PowerUp powerUp;
 
+	private HealthPool hpBar;
+
 	public Hud(Viewport viewport, SpriteBatch batch) {
 		this.batch = batch;
 		score = 0;
+
+		hpBar = new HealthPool(140, 205, batch);
 
 		setLifeBar();
 		drawPowerUpBubble();
@@ -45,10 +49,13 @@ public class Hud implements MediaDisposer.Disposable {
 		table.top().left();
 		table.setFillParent(true);
 
+
 		scoreLabel = new Label(String.format("Score: %04d ", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 		scoreLabel.setFontScale(0.5f);
 
-        table.add(scoreLabel).top().right().pad(PADDING);
+		table.add(hpBar.getHpLabel()).top().width(stage.getWidth() - hpBar.getHpX()).height(stage.getHeight()-hpBar.getHpY()).pad(PADDING);
+
+		table.add(scoreLabel).top().right().pad(PADDING).padRight(50);
         table.row().width(50);
 
 		stage.addActor(table);
@@ -98,18 +105,26 @@ public class Hud implements MediaDisposer.Disposable {
      */
 	public void update(float dt){
 		scoreLabel.setText(String.format("Score: %04d ", score));
+		hpBar.update();
 
+		stage.draw();
 		batch.begin();
 		if(powerUp.isActive()) {
 			powerUp.sumCounter(dt);
 			powerUp.draw(batch);
 		}
 		bubble.draw(batch);
+		hpBar.draw();
 		batch.end();
+	}
+
+	public HealthPool getHpBar() {
+		return hpBar;
 	}
 
 	@Override
 	public void dispose() {
 		stage.dispose();
 	}
+
 }

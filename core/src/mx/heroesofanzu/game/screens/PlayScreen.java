@@ -244,6 +244,7 @@ public class PlayScreen extends MyScreen {
 
 			if(o.getBoundingRectangle().overlaps(playerTest.getBoundingRectangle())) {
 				world.destroyBody(o.getBody());
+				hud.getHpBar().healthReduction(20);
 				iterator.remove();
 			}
 
