@@ -45,13 +45,10 @@ public class Hud implements MediaDisposer.Disposable {
 		table.top().left();
 		table.setFillParent(true);
 
-
 		scoreLabel = new Label(String.format("Score: %04d ", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 		scoreLabel.setFontScale(0.5f);
-		table.add(healthBar).left().top().pad(PADDING).padTop(35);
+		table.add(healthBar).left().top().pad(PADDING).padTop(35).expandX();
 		table.add(scoreLabel).right().top().pad(PADDING).padRight(50);
-
-        table.row().width(50);
 
 		stage.addActor(table);
 	}
@@ -66,14 +63,14 @@ public class Hud implements MediaDisposer.Disposable {
 		bubble.setPosition(350, 195);
 
 		// Default power up
-		powerUp = new PowerUp("velocity.png", false);
+		powerUp = new PowerUp(null, "velocity.png", false);
 	}
 
 	/**
 	 * Set th bubble power up
 	 */
-	public void setPowerUp(PowerUp powerUp) {
-		this.powerUp = powerUp;
+	public void setPowerUp(PowerUp p) {
+		powerUp = p;
 		powerUp.setSize(25, 25);
 		powerUp.setPosition(bubble.getX() + bubble.getWidth() / 6, bubble.getY() + bubble.getHeight() / 6);
 	}
@@ -109,7 +106,10 @@ public class Hud implements MediaDisposer.Disposable {
 		batch.begin();
 		if(powerUp.isActive()) {
 			powerUp.sumCounter(dt);
+			powerUp.enable();
 			powerUp.draw(batch);
+		} else {
+			powerUp.disable();
 		}
 		healthBar.draw(batch, 1.0f);
 		bubble.draw(batch);

@@ -146,7 +146,11 @@ public class PlayScreen extends MyScreen {
 	}
 
 	/**
-	 *
+	 * Create collection
+	 * @param layer Layer in the TMX map
+	 * @param spriteName Image name
+	 * @param width Sprite width
+	 * @param height Sprite height
 	 */
 	private ArrayList<Sprite> createSpriteCollection(int layer, String spriteName, int width, int height) {
 		ArrayList<Sprite> collection = new ArrayList<Sprite>();
@@ -160,6 +164,34 @@ public class PlayScreen extends MyScreen {
 		}
 
 		return collection;
+	}
+
+	/**
+	 * Iterate over a collection, draw all items and detect collision.
+	 * @param sprites Sprites to draw
+	 * @param listener Do something when player overlaps item
+	 */
+	private void renderSprites(ArrayList<Sprite> sprites, CollisionListener listener) {
+		Iterator<Sprite> iterator = sprites.iterator();
+		while(iterator.hasNext()) {
+			Sprite s = iterator.next();
+			s.draw(batch);
+
+			if (player.getBoundingRectangle().overlaps(s.getBoundingRectangle())) {
+				listener.onCollision(s);
+				iterator.remove();
+			}
+		}
+	}
+
+	/**
+	 * Dispose textures of all items in the collection.
+	 * @param collection Sprites
+	 */
+	private void disposeCollection(ArrayList<Sprite> collection) {
+		for(Sprite s : collection) {
+			s.getTexture().dispose();
+		}
 	}
 
 	@Override
@@ -192,34 +224,6 @@ public class PlayScreen extends MyScreen {
 		attachLightToBody(player.getBody(), Color.BLUE, 60);
 	}
 
-	/**
-	 * Iterate over a collection, draw all items and detect collision.
-	 * @param sprites Sprites to draw
-	 * @param listener Do something when player overlaps item
-	 */
-	private void renderSprites(ArrayList<Sprite> sprites, CollisionListener listener) {
-		Iterator<Sprite> iterator = sprites.iterator();
-		while(iterator.hasNext()) {
-			Sprite s = iterator.next();
-			s.draw(batch);
-
-			if (player.getBoundingRectangle().overlaps(s.getBoundingRectangle())) {
-				listener.onCollision(s);
-				iterator.remove();
-			}
-		}
-	}
-
-	/**
-	 * Dispose textures of all items in the collection.
-	 * @param collection Sprites
-	 */
-	private void disposeCollection(ArrayList<Sprite> collection) {
-		for(Sprite s : collection) {
-			s.getTexture().dispose();
-		}
-	}
-
 	@Override
 	public void render(float delta) {
 		super.render(delta);
@@ -238,7 +242,7 @@ public class PlayScreen extends MyScreen {
 		renderSprites(powerUps, new CollisionListener() {
 			@Override
 			public void onCollision(Sprite s) {
-				hud.setPowerUp(new PowerUp("velocity.png", true));
+				hud.setPowerUp(new PowerUp(player, "velocity.png", true));
 			}
 		});
 
@@ -267,14 +271,6 @@ public class PlayScreen extends MyScreen {
 				world.destroyBody(o.getBody());
 				hud.getHealthBar().healthReduction(0.2f);
 				iterator.remove();
-			}
-
-			if(Constants.DEBUGGING) {
-				shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-				Rectangle rect = o.getBoundingRectangle();
-				shapeRenderer.rect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
-				shapeRenderer.rect(player.getX(), player.getY(), player.getWidth(), player.getHeight());
-				shapeRenderer.end();
 			}
 			o.update(delta);
 		}

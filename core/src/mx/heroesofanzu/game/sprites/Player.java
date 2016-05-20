@@ -15,12 +15,21 @@ import mx.heroesofanzu.game.util.DirectionGestureDetector;
  */
 public class Player extends Entity {
 	
-    private Vector2 direction;
+    private Vector2 vector;
 	private int velocity;
+	private DIRECTION currentDirection;
+	private enum DIRECTION {
+		NONE,
+		UP,
+		DOWN,
+		LEFT,
+		RIGHT
+	}
 
 	public Player(PlayScreen screen, float x, float y) {
 		super(screen, x, y);
-		direction = new Vector2(0, 0);
+		vector = new Vector2(0, 0);
+		currentDirection = DIRECTION.NONE;
 		velocity = 0;
 	}
 
@@ -40,6 +49,29 @@ public class Player extends Entity {
 	}
 
 	/**
+	 *
+	 */
+	public void applyVector() {
+		switch (currentDirection) {
+			case UP:
+				vector.set(0, 50 + velocity);
+			break;
+
+			case DOWN:
+				vector.set(0, -50 - velocity);
+			break;
+
+			case LEFT:
+				vector.set(-50 - velocity, 0);
+			break;
+
+			case RIGHT:
+				vector.set(50 + velocity, 0);
+			break;
+		}
+	}
+
+	/**
 	 * @return Return the X position of the Box2d body.
 	 */
 	public float getYPosition() {
@@ -49,29 +81,33 @@ public class Player extends Entity {
 	@Override
 	public void update(float delta) {
 		super.update(delta);
-		getBody().setLinearVelocity(direction.x, direction.y);
+		getBody().setLinearVelocity(vector.x, vector.y);
 	}
 
 	private void setPlayerGestures() {
 		Gdx.input.setInputProcessor(new DirectionGestureDetector(new DirectionGestureDetector.DirectionListener() {
 			@Override
 			public void onUp() {
-				direction.set(0, 50 + velocity);
+				vector.set(0, 50 + velocity);
+				currentDirection = DIRECTION.UP;
 			}
 
 			@Override
 			public void onRight() {
-				direction.set(50 + velocity, 0);
+				vector.set(50 + velocity, 0);
+				currentDirection = DIRECTION.RIGHT;
 			}
 
 			@Override
 			public void onLeft() {
-				direction.set(-50 - velocity, 0);
+				vector.set(-50 - velocity, 0);
+				currentDirection = DIRECTION.LEFT;
 			}
 
 			@Override
 			public void onDown() {
-				direction.set(0, -50 - velocity);
+				vector.set(0, -50 - velocity);
+				currentDirection = DIRECTION.DOWN;
 			}
 		}));
 	}

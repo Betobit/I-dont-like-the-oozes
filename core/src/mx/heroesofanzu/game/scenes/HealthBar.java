@@ -38,7 +38,6 @@ public class HealthBar extends Actor {
 
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
-
 		loadingBar.setSize(95*currentHP, 30);
 		loadingBar.draw(batch);
 		loadingBarForeground.draw(batch);
