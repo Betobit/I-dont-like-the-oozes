@@ -1,0 +1,21 @@
+atlas.png
+size: 404, 62
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+healthbar_foreground.9
+  rotate: false
+  xy: 0, 0
+  size: 202, 62
+  split: 49, 51, 49, 52
+  orig: 202, 62
+  offset: 0, 0
+  index: -1
+healthbar_power.9
+  rotate: false
+  xy: 202, 0
+  size: 202, 62
+  split: 49, 51, 49, 52
+  orig: 202, 62
+  offset: 0, 0
+  index: -1

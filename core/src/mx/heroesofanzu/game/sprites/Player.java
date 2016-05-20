@@ -19,7 +19,7 @@ public class Player extends Entity {
 
 	public Player(PlayScreen screen, float x, float y) {
 		super(screen, x, y);
-		direction = new Vector2(16f, 0);
+		direction = new Vector2(0, 0);
 		velocity = 0;
 	}
 

@@ -78,7 +78,7 @@ public class PlayScreen extends MyScreen {
 		width = getWidth();
 		height = getHeight();
 		popSound = Gdx.audio.newSound(Gdx.files.internal("sounds/pop.mp3"));
-		//hud = new Hud(getViewport(), batch);
+		hud = new Hud(getViewport(), batch);
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class PlayScreen extends MyScreen {
 		for(Body b : alarms) {
 			ConeLight coneLight = new ConeLight(rayHandler, 200, Color.MAGENTA, 60, width/2, height/2,0, 40);
 			coneLight.attachToBody(b);
-			attachLightToBody(b, Color.RED, 40);
+			attachLightToBody(b, Color.RED, 80);
 			b.setActive(false);
 		}
 	}
@@ -167,8 +167,7 @@ public class PlayScreen extends MyScreen {
 			Rectangle rect = ((RectangleMapObject) object).getRectangle();
 			Sprite s = new Sprite(new Texture("coin.png"));
 			s.setPosition(rect.getX() + 4, rect.getY() + 4);
-			s.setSize(10, 10);
-			s.setAlpha(0.95f);
+			s.setSize(7, 7);
 			coins.add(s);
 		}
 
@@ -188,8 +187,8 @@ public class PlayScreen extends MyScreen {
 		setAlarms();
 
 		// Set player.
-		playerTest = new Player(this, width / 2, height / 2);
-		attachLightToBody(playerTest.getBody(), Color.BLUE, 80);
+		playerTest = new Player(this, width / 2, height / 2 - 10);
+		attachLightToBody(playerTest.getBody(), Color.BLUE, 60);
 	}
 
 	@Override
@@ -210,7 +209,7 @@ public class PlayScreen extends MyScreen {
 			Sprite s = powerIterator.next();
 			s.draw(batch);
 			if (playerTest.getBoundingRectangle().overlaps(s.getBoundingRectangle())) {
-				//hud.setPowerUp(new PowerUp("velocity.png", true));
+				hud.setPowerUp(new PowerUp("velocity.png", true));
 				//playerTest.applyPowerUp();
 				powerIterator.remove();
 			}
@@ -223,7 +222,7 @@ public class PlayScreen extends MyScreen {
 			s.draw(batch);
 			
 			if(playerTest.getBoundingRectangle().overlaps(s.getBoundingRectangle())) {
-				//hud.tickScore();
+				hud.tickScore();
 				coinsIterator.remove();
 				popSound.play(0.08f);
 			}
@@ -243,6 +242,7 @@ public class PlayScreen extends MyScreen {
 
 			if(o.getBoundingRectangle().overlaps(playerTest.getBoundingRectangle())) {
 				world.destroyBody(o.getBody());
+				hud.getHealthBar().healthReduction(0.2f);
 				//hud.getHpBar().healthReduction(20);
 				iterator.remove();
 			}
@@ -265,7 +265,7 @@ public class PlayScreen extends MyScreen {
 		rayHandler.setCombinedMatrix(getCamera());
 		rayHandler.updateAndRender();
 		playerTest.update(delta);
-		//hud.update(delta);
+		hud.update(delta);
 	}
 
 	@Override

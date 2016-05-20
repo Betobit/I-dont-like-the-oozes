@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="15" tilewidth="16" tileheight="16" nextobjectid="202">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="15" tilewidth="16" tileheight="16" nextobjectid="215">
  <tileset firstgid="1" name="roguelikeSheet_transparent" tilewidth="16" tileheight="16" spacing="1" tilecount="1767">
   <image source="tileset.png" width="968" height="526"/>
  </tileset>
@@ -46,6 +46,8 @@
   <object id="34" x="224" y="96" width="16" height="32"/>
   <object id="35" x="159.725" y="143.444" width="16" height="16"/>
   <object id="36" x="223.364" y="143.165" width="16" height="16"/>
+  <object id="209" x="193.786" y="108.196" width="4.34232" height="20.626"/>
+  <object id="213" x="206.431" y="108.558" width="4.34232" height="20.56"/>
  </objectgroup>
  <objectgroup name="coins">
   <object id="39" x="272" y="16" width="16" height="16"/>
