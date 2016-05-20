@@ -11,8 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sun.media.jfxmediaimpl.MediaDisposer;
 
-import java.util.ArrayList;
-
 import mx.heroesofanzu.game.sprites.powerups.PowerUp;
 
 /**
@@ -51,7 +49,7 @@ public class Hud implements MediaDisposer.Disposable {
 		scoreLabel = new Label(String.format("Score: %04d ", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 		scoreLabel.setFontScale(0.5f);
 		table.add(healthBar).left().top().pad(PADDING).padTop(35);
-		//table.add(scoreLabel).right().top().pad(PADDING).padRight(50);
+		table.add(scoreLabel).right().top().pad(PADDING).padRight(50);
 
         table.row().width(50);
 

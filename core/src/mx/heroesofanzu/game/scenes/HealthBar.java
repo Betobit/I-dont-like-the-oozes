@@ -2,11 +2,8 @@ package mx.heroesofanzu.game.scenes;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 /**
  * Created by jesusmartinez on 20/05/16.
@@ -34,8 +31,9 @@ public class HealthBar extends Actor {
 	 * @param damage
 	 */
 	public void healthReduction(float damage) {
-		if(currentHP > 0)
-		currentHP -= damage;
+		if (currentHP > 0) {
+			currentHP -= damage;
+		}
 	}
 
 	@Override

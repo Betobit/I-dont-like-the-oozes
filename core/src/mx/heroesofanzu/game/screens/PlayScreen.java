@@ -9,9 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -31,6 +29,7 @@ import box2dLight.RayHandler;
 import mx.heroesofanzu.game.Constants;
 import mx.heroesofanzu.game.HeroesOfAnzu;
 import mx.heroesofanzu.game.scenes.Hud;
+import mx.heroesofanzu.game.sprites.CollisionListener;
 import mx.heroesofanzu.game.sprites.Player;
 import mx.heroesofanzu.game.sprites.enemies.Ooze;
 import mx.heroesofanzu.game.sprites.powerups.PowerUp;
@@ -38,6 +37,7 @@ import mx.heroesofanzu.game.sprites.powerups.PowerUp;
 /**
  * Created by jesusmartinez on 25/03/16.
  */
+// TODO: Custom class for items on map.
 public class PlayScreen extends MyScreen {
 
 	// World
@@ -53,7 +53,7 @@ public class PlayScreen extends MyScreen {
 	private Sprite mapSprite;
 
 	// Entities
-	private Player playerTest;
+	private Player player;
 	private ArrayList<Ooze> oozes;
 
 	// Others
@@ -103,7 +103,7 @@ public class PlayScreen extends MyScreen {
 	 * @return Return the player.
 	 */
 	public Player getPlayer() {
-		return playerTest;
+		return player;
 	}
 
 	private void setAlarms() {
@@ -145,6 +145,23 @@ public class PlayScreen extends MyScreen {
 		return bodies;
 	}
 
+	/**
+	 *
+	 */
+	private ArrayList<Sprite> createSpriteCollection(int layer, String spriteName, int width, int height) {
+		ArrayList<Sprite> collection = new ArrayList<Sprite>();
+
+		for(MapObject object : tiledMap.getLayers().get(layer).getObjects().getByType(RectangleMapObject.class)) {
+			Rectangle rect = ((RectangleMapObject) object).getRectangle();
+			Sprite s = new Sprite(new Texture(spriteName));
+			s.setPosition(rect.getX() + 4, rect.getY() + 4);
+			s.setSize(width, height);
+			collection.add(s);
+		}
+
+		return collection;
+	}
+
 	@Override
 	public void show() {
 		// Load map and world.
@@ -161,25 +178,9 @@ public class PlayScreen extends MyScreen {
 		// Define enemies.
 		oozes = new ArrayList<Ooze>();
 
-		// Set coins.
-		coins = new ArrayList<Sprite>();
-		for(MapObject object : tiledMap.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
-			Rectangle rect = ((RectangleMapObject) object).getRectangle();
-			Sprite s = new Sprite(new Texture("coin.png"));
-			s.setPosition(rect.getX() + 4, rect.getY() + 4);
-			s.setSize(7, 7);
-			coins.add(s);
-		}
-
-		// Set power ups.
-		powerUps = new ArrayList<Sprite>();
-		for(MapObject object : tiledMap.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)) {
-			Rectangle rect = ((RectangleMapObject) object).getRectangle();
-			Sprite s = new Sprite(new Texture("powerup.png"));
-			s.setPosition(rect.getX(), rect.getY());
-			s.setSize(12, 12);
-			powerUps.add(s);
-		}
+		// Set items on map
+		coins = createSpriteCollection(5, "coin.png", 7, 7);
+		powerUps = createSpriteCollection(6, "powerup.png", 12, 12);
 
 		// Set box2d bodies.
 		createBodies(4, BodyDef.BodyType.StaticBody);
@@ -187,8 +188,36 @@ public class PlayScreen extends MyScreen {
 		setAlarms();
 
 		// Set player.
-		playerTest = new Player(this, width / 2, height / 2 - 10);
-		attachLightToBody(playerTest.getBody(), Color.BLUE, 60);
+		player = new Player(this, width / 2, height / 2 - 10);
+		attachLightToBody(player.getBody(), Color.BLUE, 60);
+	}
+
+	/**
+	 * Iterate over a collection, draw all items and detect collision.
+	 * @param sprites Sprites to draw
+	 * @param listener Do something when player overlaps item
+	 */
+	private void renderSprites(ArrayList<Sprite> sprites, CollisionListener listener) {
+		Iterator<Sprite> iterator = sprites.iterator();
+		while(iterator.hasNext()) {
+			Sprite s = iterator.next();
+			s.draw(batch);
+
+			if (player.getBoundingRectangle().overlaps(s.getBoundingRectangle())) {
+				listener.onCollision(s);
+				iterator.remove();
+			}
+		}
+	}
+
+	/**
+	 * Dispose textures of all items in the collection.
+	 * @param collection Sprites
+	 */
+	private void disposeCollection(ArrayList<Sprite> collection) {
+		for(Sprite s : collection) {
+			s.getTexture().dispose();
+		}
 	}
 
 	@Override
@@ -204,29 +233,23 @@ public class PlayScreen extends MyScreen {
 		// Draw power ups
 		batch.begin();
 		mapSprite.draw(batch);
-		Iterator<Sprite> powerIterator = powerUps.iterator();
-		while(powerIterator.hasNext()) {
-			Sprite s = powerIterator.next();
-			s.draw(batch);
-			if (playerTest.getBoundingRectangle().overlaps(s.getBoundingRectangle())) {
-				hud.setPowerUp(new PowerUp("velocity.png", true));
-				//playerTest.applyPowerUp();
-				powerIterator.remove();
-			}
-		}
 
-		// Draw coins
-		Iterator<Sprite> coinsIterator = coins.iterator();
-		while(coinsIterator.hasNext()) {
-			Sprite s = coinsIterator.next();
-			s.draw(batch);
-			
-			if(playerTest.getBoundingRectangle().overlaps(s.getBoundingRectangle())) {
+		// Draw Sprites and detect collision
+		renderSprites(powerUps, new CollisionListener() {
+			@Override
+			public void onCollision(Sprite s) {
+				hud.setPowerUp(new PowerUp("velocity.png", true));
+			}
+		});
+
+		renderSprites(coins, new CollisionListener() {
+			@Override
+			public void onCollision(Sprite s) {
 				hud.tickScore();
-				coinsIterator.remove();
 				popSound.play(0.08f);
 			}
-		}
+		});
+
 		batch.end();
 
 		// Create ooze every 4 seconds.
@@ -240,10 +263,9 @@ public class PlayScreen extends MyScreen {
 		while(iterator.hasNext()) {
 			Ooze o = iterator.next();
 
-			if(o.getBoundingRectangle().overlaps(playerTest.getBoundingRectangle())) {
+			if(o.getBoundingRectangle().overlaps(player.getBoundingRectangle())) {
 				world.destroyBody(o.getBody());
 				hud.getHealthBar().healthReduction(0.2f);
-				//hud.getHpBar().healthReduction(20);
 				iterator.remove();
 			}
 
@@ -251,12 +273,11 @@ public class PlayScreen extends MyScreen {
 				shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 				Rectangle rect = o.getBoundingRectangle();
 				shapeRenderer.rect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
-				shapeRenderer.rect(playerTest.getX(), playerTest.getY(), playerTest.getWidth(), playerTest.getHeight());
+				shapeRenderer.rect(player.getX(), player.getY(), player.getWidth(), player.getHeight());
 				shapeRenderer.end();
 			}
 			o.update(delta);
 		}
-
 
 		if(Constants.DEBUGGING) {
 			b2dr.render(world, getCamera().combined);
@@ -264,7 +285,7 @@ public class PlayScreen extends MyScreen {
 
 		rayHandler.setCombinedMatrix(getCamera());
 		rayHandler.updateAndRender();
-		playerTest.update(delta);
+		player.update(delta);
 		hud.update(delta);
 	}
 
@@ -273,5 +294,7 @@ public class PlayScreen extends MyScreen {
 		rayHandler.dispose();
 		tiledMap.dispose();
 		popSound.dispose();
+		disposeCollection(powerUps);
+		disposeCollection(coins);
 	}
 }
