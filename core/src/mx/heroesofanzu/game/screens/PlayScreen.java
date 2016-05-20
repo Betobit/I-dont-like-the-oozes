@@ -213,7 +213,7 @@ public class PlayScreen extends MyScreen {
 		oozes = new ArrayList<Ooze>();
 
 		// Set items on map
-		door = new Door(width - 180, height/2);
+		door = new Door(width - 15, height/2 - 25);
 		coins = createSpriteCollection(5, "coin.png", 7, 7);
 		powerUps = createSpriteCollection(6, "powerup.png", 12, 12);
 
@@ -239,7 +239,6 @@ public class PlayScreen extends MyScreen {
 
 		// Draw
 		batch.begin();
-		door.draw(batch);
 		mapSprite.draw(batch);
 
 		// Draw Sprites and detect collision
@@ -258,6 +257,7 @@ public class PlayScreen extends MyScreen {
 			}
 		});
 
+		door.draw(batch);
 		batch.end();
 
 
@@ -288,6 +288,14 @@ public class PlayScreen extends MyScreen {
 		rayHandler.updateAndRender();
 		player.update(delta);
 		hud.update(delta);
+
+		if(coins.isEmpty()) {
+			door.open();
+		}
+
+		if(hud.getHealthBar().isEmpty()) {
+			getGame().setScreen(new MainScreen(getGame()));
+		}
 	}
 
 	@Override

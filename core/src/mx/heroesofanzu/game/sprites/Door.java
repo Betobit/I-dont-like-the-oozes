@@ -9,12 +9,28 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
  */
 public class Door extends Sprite {
 
-	private boolean opened;
+	private boolean open;
 
 	public Door(float x, float y) {
-		super(new Texture("door/door-on.png"));
-		opened = false;
+		super(new Texture("door/door-off.png"));
+		open = false;
 		setPosition(x, y);
+		setSize(13, 22);
+	}
+
+	public boolean isOpen() {
+		return open;
+	}
+
+	/**
+	 * Open door and change texture
+	 */
+	public void open() {
+		if(!isOpen()) {
+			getTexture().dispose();
+			setTexture(new Texture("door/door-on.png"));
+			open = true;
+		}
 	}
 
 	@Override

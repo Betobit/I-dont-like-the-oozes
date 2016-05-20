@@ -27,6 +27,13 @@ public class HealthBar extends Actor {
 	}
 
 	/**
+	 * @return empty
+	 */
+	public boolean isEmpty() {
+		return currentHP <= 0;
+	}
+
+	/**
 	 * Reduce currentHP
 	 * @param damage
 	 */

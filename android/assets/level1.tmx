@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="15" tilewidth="16" tileheight="16" nextobjectid="215">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="15" tilewidth="16" tileheight="16" nextobjectid="218">
  <tileset firstgid="1" name="roguelikeSheet_transparent" tilewidth="16" tileheight="16" spacing="1" tilecount="1767">
   <image source="tileset.png" width="968" height="526"/>
  </tileset>
@@ -39,7 +39,7 @@
   <object id="21" x="287.18" y="-0.110626" width="112" height="48"/>
   <object id="22" x="-0.0811779" y="224" width="400" height="16"/>
   <object id="23" x="-0.459411" y="48.2382" width="16" height="176"/>
-  <object id="25" x="382.959" y="47.9857" width="16" height="175.679"/>
+  <object id="25" x="382.959" y="47.9857" width="16" height="81.0423"/>
   <object id="28" x="111.096" y="-0.540589" width="176.539" height="16"/>
   <object id="32" x="159.631" y="159.378" width="80" height="15.8852"/>
   <object id="33" x="160" y="96" width="16" height="32"/>
@@ -48,6 +48,8 @@
   <object id="36" x="223.364" y="143.165" width="16" height="16"/>
   <object id="209" x="193.786" y="108.196" width="4.34232" height="20.626"/>
   <object id="213" x="206.431" y="108.558" width="4.34232" height="20.56"/>
+  <object id="215" x="383.692" y="143.817" width="16" height="81.0423"/>
+  <object id="217" x="398.885" y="128.235" width="1" height="16"/>
  </objectgroup>
  <objectgroup name="coins">
   <object id="39" x="272" y="16" width="16" height="16"/>
