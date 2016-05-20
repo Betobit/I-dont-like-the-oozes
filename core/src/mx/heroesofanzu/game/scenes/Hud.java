@@ -42,13 +42,13 @@ public class Hud implements MediaDisposer.Disposable {
 
 		stage = new Stage(viewport);
 		table = new Table();
-		table.top().left();
+		table.top();
 		table.setFillParent(true);
 
 		scoreLabel = new Label(String.format("Score: %04d ", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 		scoreLabel.setFontScale(0.5f);
-		table.add(healthBar).left().top().pad(PADDING).padTop(35).expandX();
-		table.add(scoreLabel).right().top().pad(PADDING).padRight(50);
+		table.add(healthBar).pad(PADDING).padTop(35).expandX();
+		table.add(scoreLabel).right().pad(PADDING).padRight(50);
 
 		stage.addActor(table);
 	}

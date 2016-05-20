@@ -40,6 +40,7 @@ public class PowerUp extends Sprite {
 	public void disable() {
 		if(player != null) {
 			player.setVelocity(0);
+			player.applyVector();
 		}
 	}
 	/**

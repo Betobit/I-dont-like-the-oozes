@@ -49,7 +49,7 @@ public class Player extends Entity {
 	}
 
 	/**
-	 *
+	 * Apply the vector to the body using the velocity
 	 */
 	public void applyVector() {
 		switch (currentDirection) {
