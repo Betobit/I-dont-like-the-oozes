@@ -30,6 +30,7 @@ import mx.heroesofanzu.game.Constants;
 import mx.heroesofanzu.game.HeroesOfAnzu;
 import mx.heroesofanzu.game.scenes.Hud;
 import mx.heroesofanzu.game.sprites.CollisionListener;
+import mx.heroesofanzu.game.sprites.Door;
 import mx.heroesofanzu.game.sprites.Player;
 import mx.heroesofanzu.game.sprites.enemies.Ooze;
 import mx.heroesofanzu.game.sprites.powerups.PowerUp;
@@ -51,6 +52,7 @@ public class PlayScreen extends MyScreen {
 	private ArrayList<Sprite> coins;
 	private ArrayList<Sprite> powerUps;
 	private Sprite mapSprite;
+	private Door door;
 
 	// Entities
 	private Player player;
@@ -211,6 +213,7 @@ public class PlayScreen extends MyScreen {
 		oozes = new ArrayList<Ooze>();
 
 		// Set items on map
+		door = new Door(width - 180, height/2);
 		coins = createSpriteCollection(5, "coin.png", 7, 7);
 		powerUps = createSpriteCollection(6, "powerup.png", 12, 12);
 
@@ -234,8 +237,9 @@ public class PlayScreen extends MyScreen {
 			a.setTransform(a.getWorldCenter(), a.getAngle() + 0.08f);
 		}
 
-		// Draw power ups
+		// Draw
 		batch.begin();
+		door.draw(batch);
 		mapSprite.draw(batch);
 
 		// Draw Sprites and detect collision
@@ -255,6 +259,7 @@ public class PlayScreen extends MyScreen {
 		});
 
 		batch.end();
+
 
 		// Create ooze every 4 seconds.
 		if (timer >= 4 && oozes.size() < 8) {

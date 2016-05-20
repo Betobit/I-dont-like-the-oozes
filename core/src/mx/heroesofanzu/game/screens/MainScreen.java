@@ -51,8 +51,8 @@ public class MainScreen extends MyScreen {
 		// Set logo
 		Texture textureLogo = new Texture("logo.png");
 		logo = new Sprite(textureLogo);
-		logo.setSize(384, 196);
-		logo.setPosition(width/2 - logo.getWidth()/2, height - logo.getHeight() - 40);
+		logo.setSize(340, 258);
+		logo.setPosition(width/2 - logo.getWidth()/2, height - logo.getHeight() - 20);
 
 		// Set buttons
 		TextButton play = new TextButton("Jugar", skin);
