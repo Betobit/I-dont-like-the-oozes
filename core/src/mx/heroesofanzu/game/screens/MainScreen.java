@@ -22,7 +22,6 @@ public class MainScreen extends MyScreen {
 	private Stage stage;
 	private Skin skin;
 	private Table table;
-	private Sprite logo;
 
 	private int width;
 	private int height;
@@ -48,12 +47,6 @@ public class MainScreen extends MyScreen {
 		background.setPosition(0, 0);
 		background.setSize(width, height);
 
-		// Set logo
-		Texture textureLogo = new Texture("logo.png");
-		logo = new Sprite(textureLogo);
-		logo.setSize(340, 258);
-		logo.setPosition(width/2 - logo.getWidth()/2, height - logo.getHeight() - 20);
-
 		// Set buttons
 		TextButton play = new TextButton("Jugar", skin);
 		TextButton store = new TextButton("Tienda", skin);
@@ -68,9 +61,9 @@ public class MainScreen extends MyScreen {
 		table.setFillParent(true);
 		table.bottom();
 
-		table.add(play).width(200).height(60);
-		table.row().padTop(20).padBottom(50);
-		table.add(store).width(200).height(60);;
+		table.add(play).width(180).height(45);
+		table.row().padTop(20).padBottom(20);
+		table.add(store).width(180).height(45);
 
 		stage.addActor(table);
 		Gdx.input.setInputProcessor(stage);
@@ -82,7 +75,6 @@ public class MainScreen extends MyScreen {
 
 		batch.begin();
 		background.draw(batch);
-		logo.draw(batch);
 		batch.end();
 
 		stage.draw();
@@ -92,7 +84,6 @@ public class MainScreen extends MyScreen {
 	@Override
 	public void dispose() {
 		background.getTexture().dispose();
-		logo.getTexture().dispose();
 		skin.dispose();
 	}
 }

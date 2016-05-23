@@ -262,7 +262,7 @@ public class PlayScreen extends MyScreen {
 
 
 		// Create ooze every 4 seconds.
-		if (timer >= 4 && oozes.size() < 8) {
+		if (timer >= 4 && oozes.size() < 6) {
 			timer-= 4;
 			oozes.add(new Ooze(this, MathUtils.random(width - 10), MathUtils.random(height)));
 		}
@@ -293,9 +293,9 @@ public class PlayScreen extends MyScreen {
 			door.open();
 		}
 
-		if(hud.getHealthBar().isEmpty()) {
+		/*if(hud.getHealthBar().isEmpty()) {
 			getGame().setScreen(new MainScreen(getGame()));
-		}
+		}*/
 	}
 
 	@Override
