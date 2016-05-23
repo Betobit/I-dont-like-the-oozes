@@ -85,12 +85,13 @@ public class PlayScreen extends MyScreen {
 
 	/**
 	 * Attach a Point light to the given body.
-	 * @param body The body to attach the light.
-	 * @param color Color of the light.
+	 *
+	 * @param body     The body to attach the light.
+	 * @param color    Color of the light.
 	 * @param distance Distance of the light.
 	 */
 	private void attachLightToBody(Body body, Color color, int distance) {
-		new PointLight(rayHandler, 200, color, distance, width/2, height/2)
+		new PointLight(rayHandler, 200, color, distance, width / 2, height / 2)
 				.attachToBody(body);
 	}
 
@@ -109,8 +110,8 @@ public class PlayScreen extends MyScreen {
 	}
 
 	private void setAlarms() {
-		for(Body b : alarms) {
-			ConeLight coneLight = new ConeLight(rayHandler, 200, Color.MAGENTA, 60, width/2, height/2,0, 40);
+		for (Body b : alarms) {
+			ConeLight coneLight = new ConeLight(rayHandler, 200, Color.MAGENTA, 60, width / 2, height / 2, 0, 40);
 			coneLight.attachToBody(b);
 			attachLightToBody(b, Color.RED, 80);
 			b.setActive(false);
@@ -119,7 +120,8 @@ public class PlayScreen extends MyScreen {
 
 	/**
 	 * Create box2d bodies.
-	 * @param index The layer to draw.
+	 *
+	 * @param index    The layer to draw.
 	 * @param bodyType Type of the body to draw.
 	 * @return ArrayList of created bodies.
 	 */
@@ -130,14 +132,14 @@ public class PlayScreen extends MyScreen {
 		PolygonShape shape = new PolygonShape();
 		ArrayList<Body> bodies = new ArrayList<Body>();
 
-		for(MapObject object : tiledMap.getLayers().get(index).getObjects().getByType(RectangleMapObject.class)){
+		for (MapObject object : tiledMap.getLayers().get(index).getObjects().getByType(RectangleMapObject.class)) {
 			Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
 			bdef.type = bodyType;
 			bdef.position.set((rect.getX() + rect.getWidth() / 2), (rect.getY() + rect.getHeight() / 2));
 
 			body = world.createBody(bdef);
-			shape.setAsBox(rect.getWidth() / 2, rect.getHeight() / 2 );
+			shape.setAsBox(rect.getWidth() / 2, rect.getHeight() / 2);
 			fdef.shape = shape;
 			body.createFixture(fdef);
 
@@ -149,15 +151,16 @@ public class PlayScreen extends MyScreen {
 
 	/**
 	 * Create collection
-	 * @param layer Layer in the TMX map
+	 *
+	 * @param layer      Layer in the TMX map
 	 * @param spriteName Image name
-	 * @param width Sprite width
-	 * @param height Sprite height
+	 * @param width      Sprite width
+	 * @param height     Sprite height
 	 */
 	private ArrayList<Sprite> createSpriteCollection(int layer, String spriteName, int width, int height) {
 		ArrayList<Sprite> collection = new ArrayList<Sprite>();
 
-		for(MapObject object : tiledMap.getLayers().get(layer).getObjects().getByType(RectangleMapObject.class)) {
+		for (MapObject object : tiledMap.getLayers().get(layer).getObjects().getByType(RectangleMapObject.class)) {
 			Rectangle rect = ((RectangleMapObject) object).getRectangle();
 			Sprite s = new Sprite(new Texture(spriteName));
 			s.setPosition(rect.getX() + 4, rect.getY() + 4);
@@ -170,12 +173,13 @@ public class PlayScreen extends MyScreen {
 
 	/**
 	 * Iterate over a collection, draw all items and detect collision.
-	 * @param sprites Sprites to draw
+	 *
+	 * @param sprites  Sprites to draw
 	 * @param listener Do something when player overlaps item
 	 */
 	private void renderSprites(ArrayList<Sprite> sprites, CollisionListener listener) {
 		Iterator<Sprite> iterator = sprites.iterator();
-		while(iterator.hasNext()) {
+		while (iterator.hasNext()) {
 			Sprite s = iterator.next();
 			s.draw(batch);
 
@@ -188,10 +192,11 @@ public class PlayScreen extends MyScreen {
 
 	/**
 	 * Dispose textures of all items in the collection.
+	 *
 	 * @param collection Sprites
 	 */
 	private void disposeCollection(ArrayList<Sprite> collection) {
-		for(Sprite s : collection) {
+		for (Sprite s : collection) {
 			s.getTexture().dispose();
 		}
 	}
@@ -213,7 +218,7 @@ public class PlayScreen extends MyScreen {
 		oozes = new ArrayList<Ooze>();
 
 		// Set items on map
-		door = new Door(width - 15, height/2 - 25);
+		door = new Door(width - 15, height / 2 - 25);
 		coins = createSpriteCollection(5, "coin.png", 7, 7);
 		powerUps = createSpriteCollection(6, "powerup.png", 12, 12);
 
@@ -230,10 +235,10 @@ public class PlayScreen extends MyScreen {
 	@Override
 	public void render(float delta) {
 		super.render(delta);
-		timer+=delta;
+		timer += delta;
 		world.step(delta, 6, 2);
 
-		for(Body a : alarms) {
+		for (Body a : alarms) {
 			a.setTransform(a.getWorldCenter(), a.getAngle() + 0.08f);
 		}
 
@@ -263,16 +268,16 @@ public class PlayScreen extends MyScreen {
 
 		// Create ooze every 4 seconds.
 		if (timer >= 4 && oozes.size() < 6) {
-			timer-= 4;
+			timer -= 4;
 			oozes.add(new Ooze(this, MathUtils.random(width - 10), MathUtils.random(height)));
 		}
 
 		// Iterate all oozes.
 		Iterator<Ooze> iterator = oozes.iterator();
-		while(iterator.hasNext()) {
+		while (iterator.hasNext()) {
 			Ooze o = iterator.next();
 
-			if(o.getBoundingRectangle().overlaps(player.getBoundingRectangle())) {
+			if (o.getBoundingRectangle().overlaps(player.getBoundingRectangle())) {
 				world.destroyBody(o.getBody());
 				hud.getHealthBar().healthReduction(0.2f);
 				iterator.remove();
@@ -280,7 +285,7 @@ public class PlayScreen extends MyScreen {
 			o.update(delta);
 		}
 
-		if(Constants.DEBUGGING) {
+		if (Constants.DEBUGGING) {
 			b2dr.render(world, getCamera().combined);
 		}
 
@@ -289,7 +294,7 @@ public class PlayScreen extends MyScreen {
 		player.update(delta);
 		hud.update(delta);
 
-		if(coins.isEmpty()) {
+		if (coins.isEmpty()) {
 			door.open();
 		}
 
