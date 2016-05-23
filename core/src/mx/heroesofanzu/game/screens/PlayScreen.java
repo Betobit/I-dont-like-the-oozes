@@ -52,6 +52,7 @@ public class PlayScreen extends MyScreen {
 	private ArrayList<Sprite> coins;
 	private ArrayList<Sprite> powerUps;
 	private Sprite mapSprite;
+	private Sprite gOver;
 	private Door door;
 
 	// Entities
@@ -63,6 +64,8 @@ public class PlayScreen extends MyScreen {
 	private Sound popSound;
 	private ArrayList<Body> alarms;
 	private float timer;
+	private boolean gameOver;
+	private int gOverDelay;
 
 	// Debugging
 	private Box2DDebugRenderer b2dr;
@@ -74,6 +77,10 @@ public class PlayScreen extends MyScreen {
 	public PlayScreen(HeroesOfAnzu game) {
 		super(game, 400, 240);
 		timer = 0;
+		//set GameOver's utility fields
+		gameOver = false;
+		gOverDelay = 200;
+
 		alarms = new ArrayList<Body>();
 		b2dr = new Box2DDebugRenderer();
 		shapeRenderer = new ShapeRenderer();
@@ -210,6 +217,11 @@ public class PlayScreen extends MyScreen {
 		mapSprite = new Sprite(textureMap);
 		mapSprite.setSize(width, height);
 
+		//Load Gameover sprite
+		Texture textureGOver = new Texture("Game_Over.png");
+		gOver = new Sprite(textureGOver);
+		gOver.setPosition(20, height/4+120);
+
 		// Set light world.
 		rayHandler = new RayHandler(world);
 		rayHandler.setAmbientLight(0.7f);
@@ -235,14 +247,72 @@ public class PlayScreen extends MyScreen {
 	@Override
 	public void render(float delta) {
 		super.render(delta);
-		timer += delta;
-		world.step(delta, 6, 2);
+		if(!gameOver) {
+			timer += delta;
+			world.step(delta, 6, 2);
 
-		for (Body a : alarms) {
-			a.setTransform(a.getWorldCenter(), a.getAngle() + 0.08f);
+			for (Body a : alarms) {
+				a.setTransform(a.getWorldCenter(), a.getAngle() + 0.08f);
+			}
+
+			// Draw
+			draw();
+
+			// Create ooze every 4 seconds.
+			if (timer >= 4 && oozes.size() < 6) {
+				timer -= 4;
+				oozes.add(new Ooze(this, MathUtils.random(width - 10), MathUtils.random(height)));
+			}
+
+			// Iterate all oozes.
+			Iterator<Ooze> iterator = oozes.iterator();
+			while (iterator.hasNext()) {
+				Ooze o = iterator.next();
+
+				if (o.getBoundingRectangle().overlaps(player.getBoundingRectangle())) {
+					world.destroyBody(o.getBody());
+					hud.getHealthBar().healthReduction(0.2f);
+					iterator.remove();
+				}
+				o.update(delta);
+			}
+
+			if (Constants.DEBUGGING) {
+				b2dr.render(world, getCamera().combined);
+			}
+
+			rayHandler.setCombinedMatrix(getCamera());
+			rayHandler.updateAndRender();
+			player.update(delta);
+			hud.update(delta);
+
+			if (coins.isEmpty()) {
+				door.open();
+			}
+
+			if (hud.getHealthBar().isEmpty()) {
+				gameOver=true;
+			}
+
+			if(door.getBoundingRectangle().overlaps(player.getBoundingRectangle())&&door.isOpen()) {
+				//Por el momento...
+				getGame().setScreen(new MainScreen(getGame()));
+			}
 		}
+		else {
+			draw();
+			batch.begin();
+			gOver.draw(batch);
+			batch.end();
+			gOverDelay--;
+			gOver.setPosition(20, height/4+120 -(100 - gOverDelay/2));
+			if(gOverDelay==0) {
+				getGame().setScreen(new MainScreen(getGame()));
+			}
+		}
+	}
 
-		// Draw
+	public void draw() {
 		batch.begin();
 		mapSprite.draw(batch);
 
@@ -264,43 +334,6 @@ public class PlayScreen extends MyScreen {
 
 		door.draw(batch);
 		batch.end();
-
-
-		// Create ooze every 4 seconds.
-		if (timer >= 4 && oozes.size() < 6) {
-			timer -= 4;
-			oozes.add(new Ooze(this, MathUtils.random(width - 10), MathUtils.random(height)));
-		}
-
-		// Iterate all oozes.
-		Iterator<Ooze> iterator = oozes.iterator();
-		while (iterator.hasNext()) {
-			Ooze o = iterator.next();
-
-			if (o.getBoundingRectangle().overlaps(player.getBoundingRectangle())) {
-				world.destroyBody(o.getBody());
-				hud.getHealthBar().healthReduction(0.2f);
-				iterator.remove();
-			}
-			o.update(delta);
-		}
-
-		if (Constants.DEBUGGING) {
-			b2dr.render(world, getCamera().combined);
-		}
-
-		rayHandler.setCombinedMatrix(getCamera());
-		rayHandler.updateAndRender();
-		player.update(delta);
-		hud.update(delta);
-
-		if (coins.isEmpty()) {
-			door.open();
-		}
-
-		/*if(hud.getHealthBar().isEmpty()) {
-			getGame().setScreen(new MainScreen(getGame()));
-		}*/
 	}
 
 	@Override
