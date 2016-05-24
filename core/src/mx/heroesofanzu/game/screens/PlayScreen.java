@@ -291,10 +291,10 @@ public class PlayScreen extends MyScreen {
 			}
 
 			if (hud.getHealthBar().isEmpty()) {
-				gameOver=true;
+				gameOver = true;
 			}
 
-			if(door.getBoundingRectangle().overlaps(player.getBoundingRectangle())&&door.isOpen()) {
+			if(door.getBoundingRectangle().overlaps(player.getBoundingRectangle()) && door.isOpen()) {
 				//Por el momento...
 				getGame().setScreen(new MainScreen(getGame()));
 			}
@@ -328,7 +328,7 @@ public class PlayScreen extends MyScreen {
 			@Override
 			public void onCollision(Sprite s) {
 				hud.tickScore();
-				popSound.play(0.08f);
+				popSound.play(0.2f);
 			}
 		});
 
