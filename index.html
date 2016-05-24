@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>I don't like the oozes</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+</head>
+<style>
+    body {
+        background-color: #fafafa;
+    }
+
+    h2 {
+        margin-top: 2em;
+    }
+    .sprites p {
+        font-size: 18px;
+    }
+    .sprites img {
+        margin-bottom: 1em;
+        height: 72px;
+    }
+
+    #download-button {
+        font-size: 1em;
+        padding: 1em 3em;
+    }
+
+    #header {
+        background: #29d5c4;
+        background: -moz-linear-gradient(top, #29d5c4 0%, #acf477 34%, #dff468 63%, #f970c7 100%);
+        background: -webkit-linear-gradient(top, #29d5c4 0%,#acf477 34%,#dff468 63%,#f970c7 100%);
+        background: linear-gradient(to bottom, #29d5c4 0%,#acf477 34%,#dff468 63%,#f970c7 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#29d5c4', endColorstr='#f970c7',GradientType=0 );
+    }
+
+    #the-game div:nth-child(2) {
+
+    }
+
+</style>
+<body>
+    <div id="header" class="jumbotron text-center">
+        <div class="container">
+            <div class="row">
+                <img class="col-md-10 col-md-offset-1" src="images/logo.png" alt="I don't like the oozes"/>
+            </div>
+
+            <div class="row">
+                <a href="">
+                    <button id="download-button" type="button" class="btn btn-success">
+                        Try it!
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-md-7">
+                <p class="lead col-md-12">
+                    The game's objective is to capture all <strong>atoms</strong> on the maze avoiding contact with the enemy. Once the player eat every atom the door opens and then can move to the next level.
+                </p>
+                <p class="lead">
+                    As time passes it will go more enemies appearing each with different <strong>search patterns</strong>. Occasionally they appear eccentric enemies which have an unexpected pattern search.
+                </p>
+            </div>
+            <img class="col-md-5" src="images/screenshot.png" alt="Screenshot 1"/>
+        </div>
+        <!--div class="row">
+            <h2>UML</h2>
+            <img class="img-responsive" src="images/uml.png" alt="UML diagram"/>
+        </div-->
+
+        <div id="the-game" class="row">
+            <h2>The game</h2>
+            <div class="row sprites">
+                <div class="col-md-3">
+                    <img src="images/atom.png" alt="" />
+                    <p>Collect them to pass the level</p>
+                </div>
+                <div class="col-md-3">
+                    <img src="images/player.png" alt="" />
+                    <p>A tiny led</p>
+                </div>
+                <div class="col-md-3">
+                    <img src="images/powerup.png" alt="" />
+                    <p>Drink it to get extra velocity</p>
+                </div>
+                <div class="col-md-3">
+                    <img src="images/ooze.png" alt="" />
+                    <p>Enemy who try to catch the led</p>
+                </div>
+            </div>
+            <div class="row sprites" style="margin-top: 2em;">
+                <div class="col-md-5 col-md-offset-1">
+                    <img src="images/powerbar.png" alt="Powerbar">
+                    <p>Energy available</p>
+                </div>
+                <div class="col-md-3 col-md-offset-1">
+                    <img src="images/velocity.png" alt="" />
+                    <p>Show when the power up is active</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <h2>For developers</h2>
+            <a href="https://github.com/objetos15162/I-dont-like-the-oozes" target="_blank">
+                <button type="button" class="btn btn-primary">
+                    View on GitHub
+                </button>
+            </a>
+
+            <a href="https://github.com/objetos15162/I-dont-like-the-oozes/zipball/master">
+                <button type="button" class="btn btn-info">
+                    Download .zip
+                </button>
+            </a>
+
+            <a href="https://github.com/objetos15162/I-dont-like-the-oozes/tarball/master">
+                <button type="button" class="btn btn-info">
+                    Download .tar.gz
+                </button>
+            </a>
+        </div>
+
+        <div class="row">
+            <h2>Credits</h2>
+            <div class="col-md-12">
+                <span class="glyphicon glyphicon-sunglasses"></span> <strong>Development</strong>
+                <ul class="list-unstyled">
+                    <li>Martínez Mendoza Jesús <a target="_blank" href="http://github.com/betobit">@betobit</a></li>
+                    <li>Suárez Ruiz Carlos <a target="_blank" href="http://github.com/kazh027">@kazh027</a></li>
+                </ul>
+
+                <span class="glyphicon glyphicon-ice-lolly-tasted"></span> <strong>Design</strong>
+                <ul class="list-unstyled">
+                    <li>Ocejo Fernanda <a target="_blank" href="https://www.instagram.com/ocejofernanda/">@mejillo</a></li>
+                </ul>
+            </div>
+            <br/>
+            <span>Powered by <a href="https://libgdx.badlogicgames.com">libgdx</a></span>
+        </div>
+    </div>
+</body>
+</html>
