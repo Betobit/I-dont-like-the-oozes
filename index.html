@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>I don't like the oozes</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 </head>
 <style>
@@ -36,6 +37,9 @@
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#29d5c4', endColorstr='#f970c7',GradientType=0 );
     }
 
+    #UML .modal-body img {
+        width: 100%;
+    }
     #the-game div:nth-child(2) {
 
     }
@@ -114,6 +118,10 @@
                 </button>
             </a>
 
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#UML">
+                UML
+            </button>
+
             <a href="https://github.com/objetos15162/I-dont-like-the-oozes/zipball/master">
                 <button type="button" class="btn btn-info">
                     Download .zip
@@ -144,6 +152,21 @@
             <br/>
             <span>Powered by <a href="https://libgdx.badlogicgames.com">libgdx</a></span>
         </div>
+    </div>
+
+    <!-- UML -->
+    <div class="modal fade" id="UML" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">UML Diagram</h4>
+          </div>
+          <div class="modal-body">
+            <img src="images/uml.png" alt="">
+          </div>
+        </div>
+      </div>
     </div>
 </body>
 </html>
