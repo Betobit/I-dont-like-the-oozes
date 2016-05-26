@@ -41,307 +41,328 @@ import mx.heroesofanzu.game.sprites.powerups.PowerUp;
 // TODO: Custom class for items on map.
 public class PlayScreen extends MyScreen {
 
-	// World
-	private World world;
-	private RayHandler rayHandler;
-	private int width;
-	private int height;
+    // World
+    private World world;
+    private RayHandler rayHandler;
+    private int width;
+    private int height;
 
-	// Map
-	private TiledMap tiledMap;
-	private ArrayList<Sprite> coins;
-	private ArrayList<Sprite> powerUps;
-	private Sprite mapSprite;
-	private Sprite gOver;
-	private Door door;
+    // Map
+    private TiledMap tiledMap;
+    private ArrayList<Sprite> coins;
+    private ArrayList<Sprite> powerUps;
+    private Sprite mapSprite;
+    private Sprite gOver;
+    private Sprite gWin;
+    private Door door;
 
-	// Entities
-	private Player player;
-	private ArrayList<Ooze> oozes;
+    // Entities
+    private Player player;
+    private ArrayList<Ooze> oozes;
 
-	// Others
-	private Hud hud;
-	private Sound popSound;
-	private ArrayList<Body> alarms;
-	private float timer;
-	private boolean gameOver;
-	private int gOverDelay;
+    // Others
+    private Hud hud;
+    private Sound popSound;
+    private ArrayList<Body> alarms;
+    private float timer;
+    private char gameState;
+    private int gOverDelay;
 
-	// Debugging
-	private Box2DDebugRenderer b2dr;
-	private ShapeRenderer shapeRenderer;
+    // Debugging
+    private Box2DDebugRenderer b2dr;
+    private ShapeRenderer shapeRenderer;
 
-	/**
-	 * Constructor
-	 */
-	public PlayScreen(HeroesOfAnzu game) {
-		super(game, 400, 240);
-		timer = 0;
-		//set GameOver's utility fields
-		gameOver = false;
-		gOverDelay = 200;
+    /**
+     * Constructor
+     */
+    public PlayScreen(HeroesOfAnzu game) {
+        super(game, 400, 240);
+        timer = 0;
+        //set GameOver's utility fields
+        gameState = 'a';
+        gOverDelay = 200;
 
-		alarms = new ArrayList<Body>();
-		b2dr = new Box2DDebugRenderer();
-		shapeRenderer = new ShapeRenderer();
-		width = getWidth();
-		height = getHeight();
-		popSound = Gdx.audio.newSound(Gdx.files.internal("sounds/pop.mp3"));
-		hud = new Hud(getViewport(), batch);
-	}
+        alarms = new ArrayList<Body>();
+        b2dr = new Box2DDebugRenderer();
+        shapeRenderer = new ShapeRenderer();
+        width = getWidth();
+        height = getHeight();
+        popSound = Gdx.audio.newSound(Gdx.files.internal("sounds/pop.mp3"));
+        hud = new Hud(getViewport(), batch);
+    }
 
-	/**
-	 * Attach a Point light to the given body.
-	 *
-	 * @param body     The body to attach the light.
-	 * @param color    Color of the light.
-	 * @param distance Distance of the light.
-	 */
-	private void attachLightToBody(Body body, Color color, int distance) {
-		new PointLight(rayHandler, 200, color, distance, width / 2, height / 2)
-				.attachToBody(body);
-	}
+    /**
+     * Attach a Point light to the given body.
+     *
+     * @param body     The body to attach the light.
+     * @param color    Color of the light.
+     * @param distance Distance of the light.
+     */
+    private void attachLightToBody(Body body, Color color, int distance) {
+        new PointLight(rayHandler, 200, color, distance, width / 2, height / 2)
+                .attachToBody(body);
+    }
 
-	/**
-	 * @return Return the world.
-	 */
-	public World getWorld() {
-		return world;
-	}
+    /**
+     * @return Return the world.
+     */
+    public World getWorld() {
+        return world;
+    }
 
-	/**
-	 * @return Return the player.
-	 */
-	public Player getPlayer() {
-		return player;
-	}
+    /**
+     * @return Return the player.
+     */
+    public Player getPlayer() {
+        return player;
+    }
 
-	private void setAlarms() {
-		for (Body b : alarms) {
-			ConeLight coneLight = new ConeLight(rayHandler, 200, Color.MAGENTA, 60, width / 2, height / 2, 0, 40);
-			coneLight.attachToBody(b);
-			attachLightToBody(b, Color.RED, 80);
-			b.setActive(false);
-		}
-	}
+    private void setAlarms() {
+        for (Body b : alarms) {
+            ConeLight coneLight = new ConeLight(rayHandler, 200, Color.MAGENTA, 60, width / 2, height / 2, 0, 40);
+            coneLight.attachToBody(b);
+            attachLightToBody(b, Color.RED, 80);
+            b.setActive(false);
+        }
+    }
 
-	/**
-	 * Create box2d bodies.
-	 *
-	 * @param index    The layer to draw.
-	 * @param bodyType Type of the body to draw.
-	 * @return ArrayList of created bodies.
-	 */
-	private ArrayList<Body> createBodies(int index, BodyDef.BodyType bodyType) {
-		Body body;
-		BodyDef bdef = new BodyDef();
-		FixtureDef fdef = new FixtureDef();
-		PolygonShape shape = new PolygonShape();
-		ArrayList<Body> bodies = new ArrayList<Body>();
+    /**
+     * Create box2d bodies.
+     *
+     * @param index    The layer to draw.
+     * @param bodyType Type of the body to draw.
+     * @return ArrayList of created bodies.
+     */
+    private ArrayList<Body> createBodies(int index, BodyDef.BodyType bodyType) {
+        Body body;
+        BodyDef bdef = new BodyDef();
+        FixtureDef fdef = new FixtureDef();
+        PolygonShape shape = new PolygonShape();
+        ArrayList<Body> bodies = new ArrayList<Body>();
 
-		for (MapObject object : tiledMap.getLayers().get(index).getObjects().getByType(RectangleMapObject.class)) {
-			Rectangle rect = ((RectangleMapObject) object).getRectangle();
+        for (MapObject object : tiledMap.getLayers().get(index).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-			bdef.type = bodyType;
-			bdef.position.set((rect.getX() + rect.getWidth() / 2), (rect.getY() + rect.getHeight() / 2));
+            bdef.type = bodyType;
+            bdef.position.set((rect.getX() + rect.getWidth() / 2), (rect.getY() + rect.getHeight() / 2));
 
-			body = world.createBody(bdef);
-			shape.setAsBox(rect.getWidth() / 2, rect.getHeight() / 2);
-			fdef.shape = shape;
-			body.createFixture(fdef);
+            body = world.createBody(bdef);
+            shape.setAsBox(rect.getWidth() / 2, rect.getHeight() / 2);
+            fdef.shape = shape;
+            body.createFixture(fdef);
 
-			bodies.add(body);
-		}
+            bodies.add(body);
+        }
 
-		return bodies;
-	}
+        return bodies;
+    }
 
-	/**
-	 * Create collection
-	 *
-	 * @param layer      Layer in the TMX map
-	 * @param spriteName Image name
-	 * @param width      Sprite width
-	 * @param height     Sprite height
-	 */
-	private ArrayList<Sprite> createSpriteCollection(int layer, String spriteName, int width, int height) {
-		ArrayList<Sprite> collection = new ArrayList<Sprite>();
+    /**
+     * Create collection
+     *
+     * @param layer      Layer in the TMX map
+     * @param spriteName Image name
+     * @param width      Sprite width
+     * @param height     Sprite height
+     */
+    private ArrayList<Sprite> createSpriteCollection(int layer, String spriteName, int width, int height) {
+        ArrayList<Sprite> collection = new ArrayList<Sprite>();
 
-		for (MapObject object : tiledMap.getLayers().get(layer).getObjects().getByType(RectangleMapObject.class)) {
-			Rectangle rect = ((RectangleMapObject) object).getRectangle();
-			Sprite s = new Sprite(new Texture(spriteName));
-			s.setPosition(rect.getX() + 4, rect.getY() + 4);
-			s.setSize(width, height);
-			collection.add(s);
-		}
+        for (MapObject object : tiledMap.getLayers().get(layer).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            Sprite s = new Sprite(new Texture(spriteName));
+            s.setPosition(rect.getX() + 4, rect.getY() + 4);
+            s.setSize(width, height);
+            collection.add(s);
+        }
 
-		return collection;
-	}
+        return collection;
+    }
 
-	/**
-	 * Iterate over a collection, draw all items and detect collision.
-	 *
-	 * @param sprites  Sprites to draw
-	 * @param listener Do something when player overlaps item
-	 */
-	private void renderSprites(ArrayList<Sprite> sprites, CollisionListener listener) {
-		Iterator<Sprite> iterator = sprites.iterator();
-		while (iterator.hasNext()) {
-			Sprite s = iterator.next();
-			s.draw(batch);
+    /**
+     * Iterate over a collection, draw all items and detect collision.
+     *
+     * @param sprites  Sprites to draw
+     * @param listener Do something when player overlaps item
+     */
+    private void renderSprites(ArrayList<Sprite> sprites, CollisionListener listener) {
+        Iterator<Sprite> iterator = sprites.iterator();
+        while (iterator.hasNext()) {
+            Sprite s = iterator.next();
+            s.draw(batch);
 
-			if (player.getBoundingRectangle().overlaps(s.getBoundingRectangle())) {
-				listener.onCollision(s);
-				iterator.remove();
-			}
-		}
-	}
+            if (player.getBoundingRectangle().overlaps(s.getBoundingRectangle())) {
+                listener.onCollision(s);
+                iterator.remove();
+            }
+        }
+    }
 
-	/**
-	 * Dispose textures of all items in the collection.
-	 *
-	 * @param collection Sprites
-	 */
-	private void disposeCollection(ArrayList<Sprite> collection) {
-		for (Sprite s : collection) {
-			s.getTexture().dispose();
-		}
-	}
+    /**
+     * Dispose textures of all items in the collection.
+     *
+     * @param collection Sprites
+     */
+    private void disposeCollection(ArrayList<Sprite> collection) {
+        for (Sprite s : collection) {
+            s.getTexture().dispose();
+        }
+    }
 
-	@Override
-	public void show() {
-		// Load map and world.
-		tiledMap = new TmxMapLoader().load("level1.tmx");
-		world = new World(new Vector2(0, 0), true);
-		Texture textureMap = new Texture("map.png");
-		mapSprite = new Sprite(textureMap);
-		mapSprite.setSize(width, height);
+    @Override
+    public void show() {
+        // Load map and world.
+        tiledMap = new TmxMapLoader().load("level1.tmx");
+        world = new World(new Vector2(0, 0), true);
+        Texture textureMap = new Texture("map.png");
+        mapSprite = new Sprite(textureMap);
+        mapSprite.setSize(width, height);
 
-		//Load Gameover sprite
-		Texture textureGOver = new Texture("Game_Over.png");
-		gOver = new Sprite(textureGOver);
-		gOver.setPosition(20, height/4+120);
+        //Load Game Over sprite
+        Texture textureGOver = new Texture("Game_Over.png");
+        gOver = new Sprite(textureGOver);
+        gOver.setPosition(20, height / 4 + 120);
 
-		// Set light world.
-		rayHandler = new RayHandler(world);
-		rayHandler.setAmbientLight(0.7f);
+        //Load You Win sprite
+        Texture textureWin= new Texture("youWin.png");
+        gWin = new Sprite(textureWin);
+        gWin.setPosition(90, height / 4 + 120);
 
-		// Define enemies.
-		oozes = new ArrayList<Ooze>();
+        // Set light world.
+        rayHandler = new RayHandler(world);
+        rayHandler.setAmbientLight(0.7f);
 
-		// Set items on map
-		door = new Door(width - 15, height / 2 - 25);
-		coins = createSpriteCollection(5, "coin.png", 7, 7);
-		powerUps = createSpriteCollection(6, "powerup.png", 12, 12);
+        // Define enemies.
+        oozes = new ArrayList<Ooze>();
 
-		// Set box2d bodies.
-		createBodies(4, BodyDef.BodyType.StaticBody);
-		alarms = createBodies(3, BodyDef.BodyType.KinematicBody);
-		setAlarms();
+        // Set items on map
+        door = new Door(width - 15, height / 2 - 25);
+        coins = createSpriteCollection(5, "coin.png", 7, 7);
+        powerUps = createSpriteCollection(6, "powerup.png", 12, 12);
 
-		// Set player.
-		player = new Player(this, width / 2, height / 2 - 10);
-		attachLightToBody(player.getBody(), Color.BLUE, 60);
-	}
+        // Set box2d bodies.
+        createBodies(4, BodyDef.BodyType.StaticBody);
+        alarms = createBodies(3, BodyDef.BodyType.KinematicBody);
+        setAlarms();
 
-	@Override
-	public void render(float delta) {
-		super.render(delta);
-		if(!gameOver) {
-			timer += delta;
-			world.step(delta, 6, 2);
+        // Set player.
+        player = new Player(this, width / 2, height / 2 - 10);
+        attachLightToBody(player.getBody(), Color.BLUE, 60);
+    }
 
-			for (Body a : alarms) {
-				a.setTransform(a.getWorldCenter(), a.getAngle() + 0.08f);
-			}
+    @Override
+    public void render(float delta) {
+        super.render(delta);
+        switch (gameState) {
+            case 'a': // a = GameActive
 
-			// Draw
-			draw();
+                timer += delta;
+                world.step(delta, 6, 2);
 
-			// Create ooze every 4 seconds.
-			if (timer >= 4 && oozes.size() < 6) {
-				timer -= 4;
-				oozes.add(new Ooze(this, MathUtils.random(width - 10), MathUtils.random(height)));
-			}
+                for (Body a : alarms) {
+                    a.setTransform(a.getWorldCenter(), a.getAngle() + 0.08f);
+                }
 
-			// Iterate all oozes.
-			Iterator<Ooze> iterator = oozes.iterator();
-			while (iterator.hasNext()) {
-				Ooze o = iterator.next();
+                // Draw
+                draw();
 
-				if (o.getBoundingRectangle().overlaps(player.getBoundingRectangle())) {
-					world.destroyBody(o.getBody());
-					hud.getHealthBar().healthReduction(0.2f);
-					iterator.remove();
-				}
-				o.update(delta);
-			}
+                // Create ooze every 4 seconds.
+                if (timer >= 4 && oozes.size() < 6) {
+                    timer -= 4;
+                    oozes.add(new Ooze(this, MathUtils.random(width - 10), MathUtils.random(height)));
+                }
 
-			if (Constants.DEBUGGING) {
-				b2dr.render(world, getCamera().combined);
-			}
+                // Iterate all oozes.
+                Iterator<Ooze> iterator = oozes.iterator();
+                while (iterator.hasNext()) {
+                    Ooze o = iterator.next();
 
-			rayHandler.setCombinedMatrix(getCamera());
-			rayHandler.updateAndRender();
-			player.update(delta);
-			hud.update(delta);
+                    if (o.getBoundingRectangle().overlaps(player.getBoundingRectangle())) {
+                        world.destroyBody(o.getBody());
+                        hud.getHealthBar().healthReduction(0.2f);
+                        iterator.remove();
+                    }
+                    o.update(delta);
+                }
 
-			if (coins.isEmpty()) {
-				door.open();
-			}
+                if (Constants.DEBUGGING) {
+                    b2dr.render(world, getCamera().combined);
+                }
 
-			if (hud.getHealthBar().isEmpty()) {
-				gameOver = true;
-			}
+                rayHandler.setCombinedMatrix(getCamera());
+                rayHandler.updateAndRender();
+                player.update(delta);
+                hud.update(delta);
 
-			if(door.getBoundingRectangle().overlaps(player.getBoundingRectangle()) && door.isOpen()) {
-				//Por el momento...
-				getGame().setScreen(new MainScreen(getGame()));
-			}
-		}
-		else {
-			draw();
-			batch.begin();
-			gOver.draw(batch);
-			batch.end();
-			gOverDelay--;
-			gOver.setPosition(20, height/4+120 -(100 - gOverDelay/2));
-			if(gOverDelay==0) {
-				getGame().setScreen(new MainScreen(getGame()));
-			}
-		}
-	}
+                if (coins.isEmpty()) {
+                    door.open();
+                }
 
-	public void draw() {
-		batch.begin();
-		mapSprite.draw(batch);
+                //This part check the game's status
+                if (hud.getHealthBar().isEmpty()) {
+                    gameState = 'o';
+                }
+                if (door.getBoundingRectangle().overlaps(player.getBoundingRectangle()) && door.isOpen()) {
+                    gameState = 'w';
+                }
+                break;
 
-		// Draw Sprites and detect collision
-		renderSprites(powerUps, new CollisionListener() {
-			@Override
-			public void onCollision(Sprite s) {
-				hud.setPowerUp(new PowerUp(player, "velocity.png", true));
-			}
-		});
+            case 'o': // o = GameOver
+                draw();
+                batch.begin();
+                gOver.draw(batch);
+                batch.end();
+                gOverDelay--;
+                gOver.setPosition(20, height / 4 + 120 - (100 - gOverDelay / 2));
+                if (gOverDelay == 0) {
+                    getGame().setScreen(new MainScreen(getGame()));
+                }
+                break;
 
-		renderSprites(coins, new CollisionListener() {
-			@Override
-			public void onCollision(Sprite s) {
-				hud.tickScore();
-				popSound.play(0.2f);
-			}
-		});
+            case 'w': // w = YouWin
+                draw();
+                batch.begin();
+                gWin.draw(batch);
+                batch.end();
+                gOverDelay--;
+                gWin.setPosition(90, height / 4 + 120 - (100 - gOverDelay / 2));
+                if (gOverDelay == 0) {
+                    getGame().setScreen(new PlayScreen(getGame()));
+                }
+                break;
+        }
+    }
 
-		door.draw(batch);
-		batch.end();
-	}
+    public void draw() {
+        batch.begin();
+        mapSprite.draw(batch);
 
-	@Override
-	public void dispose() {
-		rayHandler.dispose();
-		tiledMap.dispose();
-		popSound.dispose();
-		disposeCollection(powerUps);
-		disposeCollection(coins);
-	}
+        // Draw Sprites and detect collision
+        renderSprites(powerUps, new CollisionListener() {
+            @Override
+            public void onCollision(Sprite s) {
+                hud.setPowerUp(new PowerUp(player, "velocity.png", true));
+            }
+        });
+
+        renderSprites(coins, new CollisionListener() {
+            @Override
+            public void onCollision(Sprite s) {
+                hud.tickScore();
+                popSound.play(0.2f);
+            }
+        });
+
+        door.draw(batch);
+        batch.end();
+    }
+
+    @Override
+    public void dispose() {
+        rayHandler.dispose();
+        tiledMap.dispose();
+        popSound.dispose();
+        disposeCollection(powerUps);
+        disposeCollection(coins);
+    }
 }
