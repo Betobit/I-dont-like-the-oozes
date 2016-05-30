@@ -1,6 +1,7 @@
 package mx.heroesofanzu.game.sprites;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -31,6 +32,25 @@ public class Player extends Entity {
 		vector = new Vector2(0, 0);
 		currentDirection = DIRECTION.NONE;
 		velocity = 0;
+	}
+
+	/**
+	 * Input handler for desktop tests.
+	 */
+	private void inputHandler() {
+		if( Gdx.input.isKeyPressed(Input.Keys.RIGHT) ) {
+			vector.set(50 + velocity, 0);
+			currentDirection = DIRECTION.RIGHT;
+		} else if( Gdx.input.isKeyPressed(Input.Keys.LEFT) ) {
+			vector.set(-50 - velocity, 0);
+			currentDirection = DIRECTION.LEFT;
+		} else if( Gdx.input.isKeyPressed(Input.Keys.UP) ) {
+			vector.set(0, 50 + velocity);
+			currentDirection = DIRECTION.UP;
+		} else if( Gdx.input.isKeyPressed(Input.Keys.DOWN) ) {
+			vector.set(0, -50 - velocity);
+			currentDirection = DIRECTION.DOWN;
+		}
 	}
 
 	/**
@@ -82,6 +102,7 @@ public class Player extends Entity {
 	public void update(float delta) {
 		super.update(delta);
 		getBody().setLinearVelocity(vector.x, vector.y);
+		inputHandler();
 	}
 
 	private void setPlayerGestures() {
