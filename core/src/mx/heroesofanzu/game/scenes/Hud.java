@@ -18,7 +18,7 @@ import mx.heroesofanzu.game.sprites.powerups.PowerUp;
  * Modified by carlossuarez on 5/05/16.
  * Represents the Hud of the game by all the relevant information
  */
-public class Hud implements MediaDisposer.Disposable {
+public class Hud {
 
 	public static final int PADDING = 10;
 	private Stage stage;
@@ -115,10 +115,4 @@ public class Hud implements MediaDisposer.Disposable {
 		bubble.draw(batch);
 		batch.end();
 	}
-
-	@Override
-	public void dispose() {
-		stage.dispose();
-	}
-
 }
