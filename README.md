@@ -1,5 +1,9 @@
 I don't like the oozes
 ===========================
+![](http://objetos15162.github.io/I-dont-like-the-oozes/images/logo.png)
+Landing page: http://objetos15162.github.io/I-dont-like-the-oozes/
+
+
 **Objetivo**
 
 El juego consiste en capturar todos los puntos evitando hacer contacto con los enemigos. Una vez que el jugador coma todos los puntos la puerta se abrirá y podrá pasar al siguiente nivel.
